@@ -3,22 +3,27 @@ info:
   description: This is a library API
   version: 1.0.0
   title: Library API
-
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 paths:
-  /addBook:
+  /books:
+    get:
+      summary: Returns all books
+      operationId: getAllBooks
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Books successfully returned
     post:
       summary: Adds new book to the library
       operationId: addBook
       consumes:
         - application/json
-      parameters: 
+      parameters:
         - in: body
-          name: Book information
-          description: asdasd 
+          name: book
           schema:
             type: object
             properties:
@@ -29,19 +34,91 @@ paths:
               category:
                 type: string
       responses:
-        200:
+        '200':
           description: Book successfully added
-        400:
+        '400':
           description: Bad request
-        500:
+        '500':
           description: Server error
+  /books/{bookId}:
+    get:
+      summary: Returns book with given id
+      operationId: getBook
+      produces:
+        - application/json
+      parameters:
+        - name: bookId
+          in: path
+          description: book's id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Book successfully returned
+          schema:
+            type: object
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Book not found
+  /books/{bookId}/copies:
+    get:
+      summary: Returns copies of a book with given id
+      operationId: getCopies
+      produces:
+        - application/json
+      parameters:
+        - name: bookId
+          in: path
+          description: book's id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Collection of book's copies successfully returned
+          schema:
+            type: array
+            items:
+              type: object
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Book not found
+  /books/search:
+    get:
+      summary: Search for a book matching given name
+      operationId: searchBook
+      produces:
+        - application/json
+      parameters:
+        - name: q
+          in: query
+          description: Book's name
+          type: string
+      responses:
+        '200':
+          description: Collection of books matching given name
+          schema:
+            type: array
+            items:
+              type: object
+  /users/{userId}/borrowings:
+    get:
+      summary: Returns user's borrowings
+      operationId: getUsersBorrowings
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          in: path
+          description: user's id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Borrowings successfully returned
       
-    
-
-# Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
-# basePath: /kalkulator/kalkulator_API/1.0.0
 schemes:
- - https
-# Added by API Auto Mocking Plugin
+  - https
 basePath: /yevhenbalytskyi1/Bibl/1.0.0
