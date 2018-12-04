@@ -1,0 +1,84 @@
+DROP DATABASE IF  EXISTS Library;
+CREATE DATABASE Library;
+
+USE Library;
+
+SET NAMES 'utf8' COLLATE 'utf8_general_ci';
+ALTER DATABASE Library CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+SET NAMES 'utf8' COLLATE 'utf8_general_ci';
+
+
+DROP TABLE IF EXISTS BookBorrowings;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS BookCopy;
+DROP TABLE IF EXISTS Category;
+DROP TABLE IF EXISTS Publisher;
+DROP TABLE IF EXISTS Author;
+DROP TABLE IF EXISTS Book;
+
+
+CREATE TABLE Author(
+  ID INT AUTO_INCREMENT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  surname VARCHAR(50) NOT NULL,
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE Publisher(
+  ID INT AUTO_INCREMENT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE Category(
+  ID INT AUTO_INCREMENT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE Book(
+  ID INT AUTO_INCREMENT NOT NULL,
+  author_id INT NOT NULL,
+  publisher_id INT NOT NULL,
+  category_id INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  publish_date DATE NOT NULL,
+  FOREIGN KEY(author_id) REFERENCES Author(ID),
+  FOREIGN KEY(publisher_id) REFERENCES Publisher(ID),
+  FOREIGN KEY(category_id) REFERENCES Category(ID),
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE BookCopy(
+  ID INT AUTO_INCREMENT NOT NULL,
+  book_id INT NOT NULL,
+  FOREIGN KEY(book_id) REFERENCES Book(ID),
+  PRIMARY KEY(ID)
+);
+
+CREATE TABLE Users(
+  ID INT AUTO_INCREMENT NOT NULL,
+  name VARCHAR(40) NOT NULL,
+  surname VARCHAR(40) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  birth_date DATE NOT NULL,
+  pesel VARCHAR(15) NOT NULL,
+  login VARCHAR(40) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  picture VARCHAR(255) NULL,
+  PRIMARY KEY(ID),
+  UNIQUE(login),
+  UNIQUE(email)
+);
+
+CREATE TABLE BookBorrowings(
+  ID INT AUTO_INCREMENT NOT NULL,
+  user_id INT NOT NULL, 
+  book_copy_id INT NOT NULL, 
+  checkout_date datetime NOT NULL,
+  return_date datetime NOT NULL,
+  PRIMARY KEY(ID),
+  FOREIGN KEY(user_id) REFERENCES Users(ID),
+  FOREIGN KEY(book_copy_id) REFERENCES BookCopy(ID)
+);
