@@ -1,0 +1,47 @@
+swagger: '2.0'
+info:
+  description: This is a library API
+  version: 1.0.0
+  title: Library API
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /addBook:
+    post:
+      summary: Adds new book to the library
+      operationId: addBook
+      consumes:
+        - application/json
+      parameters: 
+        - in: body
+          name: Book information
+          description: asdasd 
+          schema:
+            type: object
+            properties:
+              author:
+                type: string
+              name:
+                type: string
+              category:
+                type: string
+      responses:
+        200:
+          description: Book successfully added
+        400:
+          description: Bad request
+        500:
+          description: Server error
+      
+    
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+# basePath: /kalkulator/kalkulator_API/1.0.0
+schemes:
+ - https
+# Added by API Auto Mocking Plugin
+basePath: /yevhenbalytskyi1/Bibl/1.0.0
