@@ -53,6 +53,7 @@ CREATE TABLE Book(
 CREATE TABLE BookCopy(
   ID INT AUTO_INCREMENT NOT NULL,
   book_id INT NOT NULL,
+  book_availability BOOLEAN NOT NULL,
   FOREIGN KEY(book_id) REFERENCES Book(ID),
   PRIMARY KEY(ID)
 );
@@ -66,7 +67,6 @@ CREATE TABLE Users(
   pesel VARCHAR(15) NOT NULL,
   login VARCHAR(40) NOT NULL,
   password VARCHAR(100) NOT NULL,
-  picture VARCHAR(255) NULL,
   PRIMARY KEY(ID),
   UNIQUE(login),
   UNIQUE(email)
@@ -78,6 +78,7 @@ CREATE TABLE BookBorrowings(
   book_copy_id INT NOT NULL, 
   checkout_date datetime NOT NULL,
   return_date datetime NOT NULL,
+  due_date datetime NULL,
   PRIMARY KEY(ID),
   FOREIGN KEY(user_id) REFERENCES Users(ID),
   FOREIGN KEY(book_copy_id) REFERENCES BookCopy(ID)
