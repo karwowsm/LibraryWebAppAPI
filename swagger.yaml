@@ -12,7 +12,7 @@ paths:
       summary: Returns all books
       operationId: getAllBooks
       produces:
-        - application/json
+      - application/json
       responses:
         '200':
           description: Books successfully returned
@@ -20,19 +20,19 @@ paths:
       summary: Adds new book to the library
       operationId: addBook
       consumes:
-        - application/json
+      - application/json
       parameters:
-        - in: body
-          name: book
-          schema:
-            type: object
-            properties:
-              author:
-                type: string
-              name:
-                type: string
-              category:
-                type: string
+      - in: body
+        name: book
+        schema:
+          type: object
+          properties:
+            author:
+              type: string
+            name:
+              type: string
+            category:
+              type: string
       responses:
         '200':
           description: Book successfully added
@@ -45,13 +45,13 @@ paths:
       summary: Returns book with given id
       operationId: getBook
       produces:
-        - application/json
+      - application/json
       parameters:
-        - name: bookId
-          in: path
-          description: book's id
-          required: true
-          type: integer
+      - name: bookId
+        in: path
+        description: book's id
+        required: true
+        type: integer
       responses:
         '200':
           description: Book successfully returned
@@ -66,13 +66,13 @@ paths:
       summary: Returns copies of a book with given id
       operationId: getCopies
       produces:
-        - application/json
+      - application/json
       parameters:
-        - name: bookId
-          in: path
-          description: book's id
-          required: true
-          type: integer
+      - name: bookId
+        in: path
+        description: book's id
+        required: true
+        type: integer
       responses:
         '200':
           description: Collection of book's copies successfully returned
@@ -84,17 +84,18 @@ paths:
           description: Invalid ID supplied
         '404':
           description: Book not found
+
   /books/search:
     get:
       summary: Search for a book matching given name
       operationId: searchBook
       produces:
-        - application/json
+      - application/json
       parameters:
-        - name: q
-          in: query
-          description: Book's name
-          type: string
+      - name: q
+        in: query
+        description: Book's name
+        type: string
       responses:
         '200':
           description: Collection of books matching given name
@@ -102,23 +103,197 @@ paths:
             type: array
             items:
               type: object
+
   /users/{userId}/borrowings:
     get:
       summary: Returns user's borrowings
       operationId: getUsersBorrowings
       produces:
-        - application/json
+      - application/json
       parameters:
-        - name: userId
-          in: path
-          description: user's id
-          required: true
-          type: integer
+      - name: userId
+        in: path
+        description: user's id
+        required: true
+        type: integer
       responses:
         '200':
           description: Borrowings successfully returned
-      
+
+  /books/borrowings:
+    get:
+      summary: Returns all borrowed books
+      operationId: getAllBorrowedBooks
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Borrowed books successfully returned
+        '400':
+          description: No borrowings
+        '401':
+          description: Unauthorized
+
+  /books/borrow:
+    post:
+      summary: Borrow book
+      description: Add borrow to database and change book availability status to unavailable
+      operationId: borrowBookToUser
+      produces:
+      - application/json
+      parameters:
+      - name: bookBorrowing
+        required: true
+        description: Book borrowings models object
+        in: body
+        schema:
+          $ref: '#/definitions/BookBorrowingDTO'
+
+      responses:
+        '200':
+          description: Borrowed books successfully returned
+        '400':
+          description: Book is unavailable
+        '401':
+          description: Unauthorized
+
+  /books/return/{bookCopyId}:
+    put:
+      summary: Return book
+      operationId: returnBook
+      description: Returning book, change book availability status to available and insert due date in book borrowings table
+      produces:
+      - application/json
+      parameters:
+      - name: bookCopyId
+        in: path
+        description: book copy's to return id
+        required: true
+        type: integer
+      responses:
+        '200':
+          description: Return operation successfully finished
+        '400':
+          description: Book wasn't borrowed
+        '401':
+          description: Unauthorized
+
+  /users:
+    post:
+      summary: Adding new user.
+      operationId: addNewUser
+      produces:
+      - application/json
+      parameters:
+      - name: user
+        required: true
+        description: A JSON object containing user model.
+        in: body
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: User was successfully added
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+
+  /login:
+    post:
+      summary: Logs in user and returns the authentication  cookie
+      operationId: login
+      consumes:
+      - application/json
+      parameters:
+      - name: userAuthenticationDTO
+        required: true
+        description: A JSON object containing the login and password.
+        in: body
+        schema:
+          $ref: '#/definitions/UserAuthenticationDTO'
+      responses:
+        '200':
+          description: >
+            Successfully authenticated.
+            The session ID is returned in a cookie. You need to include this cookie in subsequent requests.
+          headers:
+            Set-Cookie:
+              type: string
+              description: Authentication cookie with session ID
+        '401':
+          description: Failed authentication
+
+
+
+definitions:
+  UserAuthenticationDTO:
+    description: User authentication object
+    properties:
+      username:
+        type: string
+        description: user login
+      password:
+        type: string
+        description: user password
+    required:
+    - username
+    - password
+  User:
+    description: User model
+    properties:
+      name:
+        type: string
+        description: user name
+      surname:
+        type: string
+        description: user surname
+      email:
+        type: string
+        description: user email
+      birth_date:
+        type: string
+        description: user birth date
+      pesel:
+        type: string
+        description: user pesel
+      login:
+        type: string
+        description: user login
+      password:
+        type: string
+        description: user password
+    required:
+    - name
+    - surname
+    - email
+    - birth_date
+    - pesel
+    - login
+    - password
+  BookBorrowingDTO:
+    description: Book borrowings object
+    properties:
+      user_id:
+        type: integer
+        description: User ID
+      book_copy_id:
+        type: integer
+        description: Book copy ID
+      checkout_date:
+        type: string
+        description: Book checkout date
+      return_date:
+        type: string
+        description: Book return date
+    required:
+    - user_id
+    - book_copy_id
+    - checkout_date
+    - return_date
+
+
 host: virtserver.swaggerhub.com
 schemes:
-  - https
+- https
 basePath: /yevhenbalytskyi1/Bibl/1.0.0
