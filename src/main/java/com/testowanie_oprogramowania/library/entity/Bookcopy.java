@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Bookcopy {
 
     private Long id;
-    private Byte bookAvailability;
+    private Boolean bookAvailability;
 
     @Id
     @Column(name = "ID")
@@ -22,11 +22,11 @@ public class Bookcopy {
 
     @Basic
     @Column(name = "book_availability")
-    public Byte getBookAvailability() {
+    public Boolean getBookAvailability() {
         return bookAvailability;
     }
 
-    public void setBookAvailability(Byte bookAvailability) {
+    public void setBookAvailability(Boolean bookAvailability) {
         this.bookAvailability = bookAvailability;
     }
 
