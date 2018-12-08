@@ -36,7 +36,7 @@ public class Category implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return id == category.id &&
+        return Objects.equals(id, category.id) &&
                 Objects.equals(name, category.name);
     }
 

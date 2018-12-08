@@ -7,6 +7,7 @@ import com.testowanie_oprogramowania.library.entity.Publisher;
 import com.testowanie_oprogramowania.library.repository.BookRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,19 +46,25 @@ public class BookServiceImplTest {
     @BeforeClass
     public static void setUp() {
         Book book1 = new Book();
+        book1.setId(new Long(16));
         Author author = new Author();
         author.setId(new Long(5));
+        author.setName("J.R.R.");
+        author.setSurname("Tolkien");
         book1.setAuthor(author);
         Publisher publisher = new Publisher();
         publisher.setId(new Long(2));
+        publisher.setName("Amber");
         book1.setPublisher(publisher);
         Category category = new Category();
         category.setId(new Long(4));
+        category.setName("fantasy");
         book1.setCategory(category);
         book1.setName("Dwie wieże");
         book1.setPublishDate(1954);
 
         Book book2 = new Book();
+        book2.setId(new Long(17));
         book2.setAuthor(author);
         book2.setPublisher(publisher);
         book2.setCategory(category);
@@ -75,4 +82,13 @@ public class BookServiceImplTest {
         List<Book> foundBooks = bookService.getAllBooks();
         assertEquals(foundBooks, books);
     }
+
+    @Test
+    public void testGetBook() {
+        Book book = books.get(0);
+        when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
+        Book foundBook = bookService.getBook(book.getId());
+        assertEquals(foundBook, book);
+    }
+
 }

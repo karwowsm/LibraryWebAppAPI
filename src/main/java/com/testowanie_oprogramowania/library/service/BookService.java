@@ -10,4 +10,6 @@ import java.util.List;
 public interface BookService {
 
     List<Book> getAllBooks();
+
+    Book getBook(Long id);
 }

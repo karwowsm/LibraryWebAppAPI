@@ -46,6 +46,30 @@ public class BookRepositoryTest {
     }
 
     @Test
+    public void testFindById() {
+        Book expectedBook = new Book();
+        Long bookId = new Long(1);
+        expectedBook.setId(bookId);
+        Author author = new Author();
+        author.setId(new Long(1));
+        author.setName("Stephen");
+        author.setSurname("King");
+        expectedBook.setAuthor(author);
+        Publisher publisher = new Publisher();
+        publisher.setId(new Long(1));
+        publisher.setName("Iskry");
+        expectedBook.setPublisher(publisher);
+        Category category = new Category();
+        category.setId(new Long(1));
+        category.setName("horror");
+        expectedBook.setCategory(category);
+        expectedBook.setName("Lśnienie");
+        expectedBook.setPublishDate(1977);
+        Book book = bookRepository.findById(bookId).orElse(null);
+        assertEquals(expectedBook, book);
+    }
+
+    @Test
     public void testSave() {
         Book newBook = new Book();
         Author author = new Author();

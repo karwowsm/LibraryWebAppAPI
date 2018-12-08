@@ -41,24 +41,33 @@ public class BookControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    private final String basePath = BookController.class
+            .getAnnotation(RequestMapping.class).value()[0];
+
     private static List<Book> books;
 
     @BeforeClass
     public static void setUp() {
         Book book1 = new Book();
+        book1.setId(new Long(16));
         Author author = new Author();
         author.setId(new Long(5));
+        author.setName("J.R.R.");
+        author.setSurname("Tolkien");
         book1.setAuthor(author);
         Publisher publisher = new Publisher();
         publisher.setId(new Long(2));
+        publisher.setName("Amber");
         book1.setPublisher(publisher);
         Category category = new Category();
         category.setId(new Long(4));
+        category.setName("fantasy");
         book1.setCategory(category);
         book1.setName("Dwie wieże");
         book1.setPublishDate(1954);
 
         Book book2 = new Book();
+        book2.setId(new Long(17));
         book2.setAuthor(author);
         book2.setPublisher(publisher);
         book2.setCategory(category);
@@ -73,11 +82,32 @@ public class BookControllerTest {
     @Test
     public void testGetAllBooks() throws Exception {
         given(bookService.getAllBooks()).willReturn(books);
-        String path = BookController.class.getAnnotation(RequestMapping.class).value()[0];
-        MvcResult result = mockMvc.perform(get(path))
+        MvcResult result = mockMvc.perform(get(basePath))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONAssert.assertEquals(objectMapper.writeValueAsString(books),
                 result.getResponse().getContentAsString(), JSONCompareMode.STRICT);
     }
+
+    @Test
+    public void testGetBook1() throws Exception {
+        Book book = books.get(0);
+        given(bookService.getBook(book.getId())).willReturn(book);
+        String path = basePath.concat("/").concat(book.getId().toString());
+        MvcResult result = mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONAssert.assertEquals(objectMapper.writeValueAsString(book),
+                result.getResponse().getContentAsString(), JSONCompareMode.STRICT);
+    }
+
+    @Test
+    public void testGetBook2() throws Exception {
+        Long bookId = new Long(18);
+        given(bookService.getBook(bookId)).willReturn(null);
+        String path = basePath.concat("/").concat(bookId.toString());
+        mockMvc.perform(get(path))
+                .andExpect(status().isNotFound());
+    }
+
 }
