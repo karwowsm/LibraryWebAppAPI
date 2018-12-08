@@ -19,7 +19,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBook(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return bookRepository.findById(id).orElse(null);
     }
 
 }
