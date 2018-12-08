@@ -123,3 +123,20 @@ INSERT INTO Book (author_id, publisher_id, category_id, name, publish_date) VALU
 	(5, 6, 4, 'Drużyna Pierścienia', 1954),
 	(6, 7, 4, 'Mort', 1987),
 	(6, 7, 4, 'Straż! Straż!', 1989);
+
+INSERT INTO BookCopy (book_id, book_availability) VALUES
+	(1, TRUE),
+	(2, TRUE),
+	(3, TRUE),
+	(4, TRUE),
+	(5, TRUE),
+	(6, TRUE),
+	(7, TRUE),
+	(8, TRUE),
+	(9, TRUE),
+	(10, FALSE),
+	(11, FALSE),
+	(12, FALSE),
+	(13, FALSE),
+	(14, FALSE),
+	(15, FALSE);
