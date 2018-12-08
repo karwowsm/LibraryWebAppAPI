@@ -37,6 +37,15 @@ public class BookController {
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/{id}/copies")
+    public ResponseEntity getCopies(@PathVariable("id") Long id) {
+        Book book = bookService.getBook(id);
+        if (book != null) {
+            return new ResponseEntity(bookService.getCopies(id), HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<Book>> searchBook(@RequestParam("q") String q) {
         return new ResponseEntity(bookService.searchBook(q), HttpStatus.OK);

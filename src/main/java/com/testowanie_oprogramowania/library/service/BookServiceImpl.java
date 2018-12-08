@@ -2,6 +2,7 @@ package com.testowanie_oprogramowania.library.service;
 
 import com.testowanie_oprogramowania.library.entity.Book;
 import com.testowanie_oprogramowania.library.entity.BookCopy;
+import com.testowanie_oprogramowania.library.repository.BookCopyRepository;
 import com.testowanie_oprogramowania.library.repository.BookRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private BookCopyRepository bookCopyRepository;
 
     @Override
     public List<Book> getAllBooks() {
@@ -30,7 +34,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookCopy> getCopies(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return bookCopyRepository.findByBookId(id);
     }
 
 }
