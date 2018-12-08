@@ -65,19 +65,6 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void testDeleteAll() {
-        bookRepository.deleteAll();
-        assertEquals(bookRepository.count(), 0);
-    }
-
-    @Test
-    public void testDeleteById() {
-        Long id = new Long(1);
-        bookRepository.deleteById(id);
-        assertEquals(bookRepository.existsById(id), false);
-    }
-
-    @Test
     public void testFindAll() {
         List<Book> books = (List<Book>) bookRepository.findAll();
         assertEquals(books.size(), 15);
