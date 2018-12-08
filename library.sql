@@ -126,6 +126,7 @@ INSERT INTO Book (author_id, publisher_id, category_id, name, publish_date) VALU
 
 INSERT INTO BookCopy (book_id, book_availability) VALUES
 	(1, TRUE),
+	(1, FALSE),
 	(2, TRUE),
 	(3, TRUE),
 	(4, TRUE),
@@ -137,6 +138,5 @@ INSERT INTO BookCopy (book_id, book_availability) VALUES
 	(10, FALSE),
 	(11, FALSE),
 	(12, FALSE),
-	(13, FALSE),
 	(14, FALSE),
 	(15, FALSE);

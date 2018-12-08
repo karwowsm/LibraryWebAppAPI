@@ -2,8 +2,10 @@ package com.testowanie_oprogramowania.library.service;
 
 import com.testowanie_oprogramowania.library.entity.Author;
 import com.testowanie_oprogramowania.library.entity.Book;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
 import com.testowanie_oprogramowania.library.entity.Category;
 import com.testowanie_oprogramowania.library.entity.Publisher;
+import com.testowanie_oprogramowania.library.repository.BookCopyRepository;
 import com.testowanie_oprogramowania.library.repository.BookRepository;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +46,11 @@ public class BookServiceImplTest {
     @MockBean
     private BookRepository bookRepository;
 
+    @MockBean
+    private BookCopyRepository bookCopyRepository;
+
     private static List<Book> books;
+    private static List<BookCopy> bookCopies;
 
     @BeforeClass
     public static void setUp() {
@@ -77,6 +83,20 @@ public class BookServiceImplTest {
         books = new ArrayList();
         books.add(book1);
         books.add(book2);
+
+        BookCopy bookCopy1 = new BookCopy();
+        bookCopy1.setId(new Long(1));
+        bookCopy1.setBook(book1);
+        bookCopy1.setBookAvailability(Boolean.TRUE);
+
+        BookCopy bookCopy2 = new BookCopy();
+        bookCopy2.setId(new Long(2));
+        bookCopy2.setBook(book1);
+        bookCopy2.setBookAvailability(Boolean.FALSE);
+
+        bookCopies = new ArrayList();
+        bookCopies.add(bookCopy1);
+        bookCopies.add(bookCopy2);
     }
 
     @Test
@@ -109,6 +129,22 @@ public class BookServiceImplTest {
                 .thenReturn(Collections.emptyList());
         List<Book> foundBooks = bookService.searchBook(Mockito.anyString());
         assertTrue(foundBooks.isEmpty());
+    }
+
+    @Test
+    public void testGetCopies_existing() {
+        when(bookCopyRepository.findByBookId(Mockito.anyLong()))
+                .thenReturn(bookCopies);
+        List<BookCopy> foundBookCopies = bookService.getCopies(Mockito.anyLong());
+        assertEquals(foundBookCopies, bookCopies);
+    }
+
+    @Test
+    public void testGetCopies_notExisting() {
+        when(bookCopyRepository.findByBookId(Mockito.anyLong()))
+                .thenReturn(Collections.emptyList());
+        List<BookCopy> foundBookCopies = bookService.getCopies(Mockito.anyLong());
+        assertTrue(foundBookCopies.isEmpty());
     }
 
 }

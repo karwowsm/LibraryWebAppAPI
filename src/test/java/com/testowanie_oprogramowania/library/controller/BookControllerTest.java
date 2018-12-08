@@ -3,6 +3,7 @@ package com.testowanie_oprogramowania.library.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testowanie_oprogramowania.library.entity.Author;
 import com.testowanie_oprogramowania.library.entity.Book;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
 import com.testowanie_oprogramowania.library.entity.Category;
 import com.testowanie_oprogramowania.library.entity.Publisher;
 import com.testowanie_oprogramowania.library.service.BookService;
@@ -49,6 +50,7 @@ public class BookControllerTest {
             .getAnnotation(RequestMapping.class).value()[0];
 
     private static List<Book> books;
+    private static List<BookCopy> bookCopies;
 
     @BeforeClass
     public static void setUp() {
@@ -81,6 +83,20 @@ public class BookControllerTest {
         books = new ArrayList();
         books.add(book1);
         books.add(book2);
+
+        BookCopy bookCopy1 = new BookCopy();
+        bookCopy1.setId(new Long(1));
+        bookCopy1.setBook(book1);
+        bookCopy1.setBookAvailability(Boolean.TRUE);
+
+        BookCopy bookCopy2 = new BookCopy();
+        bookCopy2.setId(new Long(2));
+        bookCopy2.setBook(book1);
+        bookCopy2.setBookAvailability(Boolean.FALSE);
+
+        bookCopies = new ArrayList();
+        bookCopies.add(bookCopy1);
+        bookCopies.add(bookCopy2);
     }
 
     @Test
@@ -107,7 +123,7 @@ public class BookControllerTest {
 
     @Test
     public void testGetBook_badRequest() throws Exception {
-        String path = basePath.concat("/").concat("a");
+        String path = basePath.concat("/").concat("NaN");
         mockMvc.perform(get(path))
                 .andExpect(status().isBadRequest());
     }
@@ -138,10 +154,52 @@ public class BookControllerTest {
         String q = Mockito.anyString();
         given(bookService.searchBook(q)).willReturn(Collections.emptyList());
         String path = basePath.concat("/search");
-        MvcResult result = mockMvc.perform(get(path).param("q", q))
+        mockMvc.perform(get(path).param("q", q))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", empty()))
+                .andExpect(jsonPath("$", empty()));
+    }
+
+    @Test
+    public void testGetCopies_existing() throws Exception {
+        Book book = books.get(0);
+        given(bookService.getBook(book.getId())).willReturn(book);
+        given(bookService.getCopies(book.getId())).willReturn(bookCopies);
+        String path = basePath.concat("/").concat(book.getId().toString())
+                .concat("/copies");
+        MvcResult result = mockMvc.perform(get(path))
+                .andExpect(status().isOk())
                 .andReturn();
+        JSONAssert.assertEquals(objectMapper.writeValueAsString(bookCopies),
+                result.getResponse().getContentAsString(), JSONCompareMode.STRICT);
+    }
+
+    @Test
+    public void testGetCopies_badRequest() throws Exception {
+        String path = basePath.concat("/").concat("NaN").concat("/copies");
+        mockMvc.perform(get(path))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetCopies_notExistingBook() throws Exception {
+        Long bookId = new Long(18);
+        given(bookService.getBook(bookId)).willReturn(null);
+        String path = basePath.concat("/").concat(bookId.toString())
+                .concat("/copies");
+        mockMvc.perform(get(path))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testGetCopies_notExistingCopies() throws Exception {
+        Book book = books.get(0);
+        given(bookService.getBook(book.getId())).willReturn(book);
+        given(bookService.getCopies(book.getId())).willReturn(Collections.emptyList());
+        String path = basePath.concat("/").concat(book.getId().toString())
+                .concat("/copies");
+        mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", empty()));
     }
 
 }

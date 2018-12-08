@@ -1,6 +1,7 @@
 package com.testowanie_oprogramowania.library.service;
 
 import com.testowanie_oprogramowania.library.entity.Book;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
 import java.util.List;
 
 /**
@@ -13,5 +14,7 @@ public interface BookService {
 
     Book getBook(Long id);
 
-    public List<Book> searchBook(String q);
+    List<Book> searchBook(String q);
+
+    List<BookCopy> getCopies(Long id);
 }
