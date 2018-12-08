@@ -1,11 +1,12 @@
 package com.testowanie_oprogramowania.library.entity;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "author")
-public class Author {
+public class Author implements Serializable {
 
     private Long id;
     private String name;
