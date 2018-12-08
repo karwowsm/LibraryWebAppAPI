@@ -94,4 +94,5 @@ public class Book implements Serializable {
     public int hashCode() {
         return Objects.hash(id, author, publisher, category, name, publishDate);
     }
+
 }

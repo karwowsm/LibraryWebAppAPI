@@ -7,11 +7,14 @@ import com.testowanie_oprogramowania.library.entity.Category;
 import com.testowanie_oprogramowania.library.entity.Publisher;
 import com.testowanie_oprogramowania.library.service.BookService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import static org.hamcrest.Matchers.empty;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.BDDMockito.given;
+import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -90,7 +94,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testGetBook1() throws Exception {
+    public void testGetBook_existing() throws Exception {
         Book book = books.get(0);
         given(bookService.getBook(book.getId())).willReturn(book);
         String path = basePath.concat("/").concat(book.getId().toString());
@@ -102,12 +106,42 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testGetBook2() throws Exception {
+    public void testGetBook_badRequest() throws Exception {
+        String path = basePath.concat("/").concat("a");
+        mockMvc.perform(get(path))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testGetBook_notExisting() throws Exception {
         Long bookId = new Long(18);
         given(bookService.getBook(bookId)).willReturn(null);
         String path = basePath.concat("/").concat(bookId.toString());
         mockMvc.perform(get(path))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testSearchBook_existing() throws Exception {
+        String q = Mockito.anyString();
+        given(bookService.searchBook(q)).willReturn(books);
+        String path = basePath.concat("/search");
+        MvcResult result = mockMvc.perform(get(path).param("q", q))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONAssert.assertEquals(objectMapper.writeValueAsString(books),
+                result.getResponse().getContentAsString(), JSONCompareMode.STRICT);
+    }
+
+    @Test
+    public void testSearchBook_notExisting() throws Exception {
+        String q = Mockito.anyString();
+        given(bookService.searchBook(q)).willReturn(Collections.emptyList());
+        String path = basePath.concat("/search");
+        MvcResult result = mockMvc.perform(get(path).param("q", q))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", empty()))
+                .andReturn();
     }
 
 }

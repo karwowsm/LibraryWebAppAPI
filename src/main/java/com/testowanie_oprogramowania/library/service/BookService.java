@@ -12,4 +12,6 @@ public interface BookService {
     List<Book> getAllBooks();
 
     Book getBook(Long id);
+
+    public List<Book> searchBook(String q);
 }

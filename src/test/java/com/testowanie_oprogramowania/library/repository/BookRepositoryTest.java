@@ -4,8 +4,11 @@ import com.testowanie_oprogramowania.library.entity.Author;
 import com.testowanie_oprogramowania.library.entity.Book;
 import com.testowanie_oprogramowania.library.entity.Category;
 import com.testowanie_oprogramowania.library.entity.Publisher;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,41 @@ public class BookRepositoryTest {
 
     @Autowired
     private BookRepository bookRepository;
+
+    private static List<Book> harryPotterBooks;
+
+    @BeforeClass
+    public static void setUp() {
+        Book harryPotterBook1 = new Book();
+        harryPotterBook1.setId(new Long(11));
+        Author harryPotterAuthor = new Author();
+        harryPotterAuthor.setId(new Long(4));
+        harryPotterAuthor.setName("J.K.");
+        harryPotterAuthor.setSurname("Rowling");
+        harryPotterBook1.setAuthor(harryPotterAuthor);
+        Publisher harryPotterPublisher = new Publisher();
+        harryPotterPublisher.setId(new Long(5));
+        harryPotterPublisher.setName("Media Rodzina");
+        harryPotterBook1.setPublisher(harryPotterPublisher);
+        Category harryPotterCategory = new Category();
+        harryPotterCategory.setId(new Long(4));
+        harryPotterCategory.setName("fantasy");
+        harryPotterBook1.setCategory(harryPotterCategory);
+        harryPotterBook1.setName("Harry Potter i Komnata Tajemnic");
+        harryPotterBook1.setPublishDate(1998);
+
+        Book harryPotterBook2 = new Book();
+        harryPotterBook2.setId(new Long(12));
+        harryPotterBook2.setAuthor(harryPotterAuthor);
+        harryPotterBook2.setPublisher(harryPotterPublisher);
+        harryPotterBook2.setCategory(harryPotterCategory);
+        harryPotterBook2.setName("Harry Potter i Insygnia Śmierci");
+        harryPotterBook2.setPublishDate(2007);
+
+        harryPotterBooks = new ArrayList();
+        harryPotterBooks.add(harryPotterBook1);
+        harryPotterBooks.add(harryPotterBook2);
+    }
 
     @Test
     public void testDeleteAll() {
@@ -85,6 +123,72 @@ public class BookRepositoryTest {
         newBook.setPublishDate(1994);
         bookRepository.save(newBook);
         assertEquals(bookRepository.count(), 16);
+    }
+
+    @Test
+    public void testFindByNameContaining_atTheBeginning_beginningWithUpperCase() {
+        List<Book> books = bookRepository.findByNameContaining("Harry");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_atTheBeginning_allLowerCase() {
+        List<Book> books = bookRepository.findByNameContaining("harry");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_atTheBeginning_allUpperCase() {
+        List<Book> books = bookRepository.findByNameContaining("HARRY");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_atTheBeginning_mixedCase_beginningWithLowerCase() {
+        List<Book> books = bookRepository.findByNameContaining("hArRy");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_atTheBeginning_mixedCase_beginningWithUpperCase() {
+        List<Book> books = bookRepository.findByNameContaining("HaRrY");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_inTheMiddle_beginningWithUpperCase() {
+        List<Book> books = bookRepository.findByNameContaining("Potter");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_inTheMiddle_allLowerCase() {
+        List<Book> books = bookRepository.findByNameContaining("potter");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_inTheMiddle_allUpperCase() {
+        List<Book> books = bookRepository.findByNameContaining("POTTER");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_inTheMiddle_mixedCase_beginningWithLowerCase() {
+        List<Book> books = bookRepository.findByNameContaining("pOtTeR");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_inTheMiddle_mixedCase_beginningWithUpperCase() {
+        List<Book> books = bookRepository.findByNameContaining("PoTtEr");
+        assertEquals(books, harryPotterBooks);
+    }
+
+    @Test
+    public void testFindByNameContaining_notExisting() {
+        List<Book> books = bookRepository.findByNameContaining("kjdsabjsadfig");
+        assertTrue(books.isEmpty());
     }
 
 }

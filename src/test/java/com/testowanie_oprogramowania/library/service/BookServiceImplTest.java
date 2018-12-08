@@ -6,12 +6,15 @@ import com.testowanie_oprogramowania.library.entity.Category;
 import com.testowanie_oprogramowania.library.entity.Publisher;
 import com.testowanie_oprogramowania.library.repository.BookRepository;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -86,9 +89,26 @@ public class BookServiceImplTest {
     @Test
     public void testGetBook() {
         Book book = books.get(0);
-        when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
+        when(bookRepository.findById(book.getId()))
+                .thenReturn(Optional.of(book));
         Book foundBook = bookService.getBook(book.getId());
         assertEquals(foundBook, book);
+    }
+
+    @Test
+    public void testSearchBook_existing() {
+        when(bookRepository.findByNameContaining(Mockito.anyString()))
+                .thenReturn(books);
+        List<Book> foundBooks = bookService.searchBook(Mockito.anyString());
+        assertEquals(foundBooks, books);
+    }
+
+    @Test
+    public void testSearchBook_notExisting() {
+        when(bookRepository.findByNameContaining(Mockito.anyString()))
+                .thenReturn(Collections.emptyList());
+        List<Book> foundBooks = bookService.searchBook(Mockito.anyString());
+        assertTrue(foundBooks.isEmpty());
     }
 
 }
