@@ -1,7 +1,6 @@
 package com.testowanie_oprogramowania.library.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.Objects;
 
 @Entity
@@ -10,7 +9,7 @@ public class Book {
 
     private Long id;
     private String name;
-    private Date publishDate;
+    private Integer publishDate;
 
     @Id
     @Column(name = "ID")
@@ -34,22 +33,26 @@ public class Book {
 
     @Basic
     @Column(name = "publish_date")
-    public Date getPublishDate() {
+    public Integer getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(Date publishDate) {
+    public void setPublishDate(Integer publishDate) {
         this.publishDate = publishDate;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Book book = (Book) o;
-        return id == book.id &&
-                Objects.equals(name, book.name) &&
-                Objects.equals(publishDate, book.publishDate);
+        return Objects.equals(id, book.id)
+                && Objects.equals(name, book.name)
+                && Objects.equals(publishDate, book.publishDate);
     }
 
     @Override

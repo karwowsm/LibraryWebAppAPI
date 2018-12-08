@@ -43,7 +43,7 @@ CREATE TABLE Book(
   publisher_id INT NOT NULL,
   category_id INT NOT NULL,
   name VARCHAR(255) NOT NULL,
-  publish_date DATE NOT NULL,
+  publish_date YEAR NOT NULL,
   FOREIGN KEY(author_id) REFERENCES Author(ID),
   FOREIGN KEY(publisher_id) REFERENCES Publisher(ID),
   FOREIGN KEY(category_id) REFERENCES Category(ID),
@@ -83,3 +83,43 @@ CREATE TABLE BookBorrowings(
   FOREIGN KEY(user_id) REFERENCES Users(ID),
   FOREIGN KEY(book_copy_id) REFERENCES BookCopy(ID)
 );
+
+INSERT INTO Author (name, surname) VALUES
+	('Stephen', 'King'),
+	('Dan', 'Brown'),
+	('Andrzej', 'Sapkowski'),
+	('J.K.', 'Rowling'),
+	('J.R.R.', 'Tolkien'),
+	('Terry', 'Pratchett');
+	
+INSERT INTO Publisher (name) VALUES
+	('Iskry'),
+	('Amber'),
+	('Albatros'),
+	('superNOWA'),
+	('Media Rodzina'),
+	('Spółdzielnia Wydawnicza „Czytelnik”'),
+	('Prószyński i S-ka');
+	
+INSERT INTO Category (name) VALUES
+	('horror'),
+	('powieść'),
+	('thriller'),
+	('fantasy');
+  
+INSERT INTO Book (author_id, publisher_id, category_id, name, publish_date) VALUES
+	(1, 1, 1, 'Lśnienie', 1977),
+	(1, 2, 1, 'To', 1986),
+	(1, 1, 1, 'Carrie', 1974),
+	(1, 3, 2, 'Zielona Mila', 1996),
+	(2, 3, 3, 'Kod Leonarda da Vinci', 2003),
+	(2, 3, 3, 'Anioły i Demony', 2000),
+	(2, 3, 3, 'Inferno', 2013),
+	(3, 4, 4, 'Krew elfów', 1994),
+	(3, 4, 4, 'Czas pogardy', 1995),
+	(3, 4, 4, 'Pani Jeziora', 1999),
+	(4, 5, 4, 'Harry Potter i Komnata Tajemnic', 1998),
+	(4, 5, 4, 'Harry Potter i Insygnia Śmierci', 2007),
+	(5, 6, 4, 'Drużyna Pierścienia', 1954),
+	(6, 7, 4, 'Mort', 1987),
+	(6, 7, 4, 'Straż! Straż!', 1989);
