@@ -77,8 +77,8 @@ CREATE TABLE BookBorrowings(
   user_id INT NOT NULL, 
   book_copy_id INT NOT NULL, 
   checkout_date datetime NOT NULL,
-  return_date datetime NOT NULL,
-  due_date datetime NULL,
+  due_date datetime NOT NULL,
+  return_date datetime NULL,
   PRIMARY KEY(ID),
   FOREIGN KEY(user_id) REFERENCES Users(ID),
   FOREIGN KEY(book_copy_id) REFERENCES BookCopy(ID)
@@ -126,6 +126,7 @@ INSERT INTO Book (author_id, publisher_id, category_id, name, publish_date) VALU
 
 INSERT INTO BookCopy (book_id, book_availability) VALUES
 	(1, TRUE),
+	(1, FALSE),
 	(2, TRUE),
 	(3, TRUE),
 	(4, TRUE),
@@ -137,6 +138,21 @@ INSERT INTO BookCopy (book_id, book_availability) VALUES
 	(10, FALSE),
 	(11, FALSE),
 	(12, FALSE),
-	(13, FALSE),
 	(14, FALSE),
 	(15, FALSE);
+
+INSERT INTO Users (name, surname, email, birth_date, pesel, login, password) VALUES
+	('Jan', 'Kowalski', 'jan.kowalski@gmail.com', '1997-01-01', '97010166666', 'jkowalski', 'asdf'),
+	('Jan', 'Nowak', 'jan.nowak@gmail.com', '1983-12-12', '83121277777', 'jnowak', 'zxcv');
+
+INSERT INTO BookBorrowings (user_id, book_copy_id, checkout_date, due_date) VALUES
+	(1, 2, '2018-12-01 15:15:15', '2019-01-01 15:15:15'),
+	(1, 11, '2018-12-08 15:15:15', '2019-01-08 15:15:15'),
+	(1, 12, '2018-11-08 15:15:15', '2018-12-08 15:15:15'),
+	(2, 13, '2018-11-15 15:15:15', '2018-12-15 15:15:15'),
+	(2, 14, '2018-11-22 15:15:15', '2018-12-22 15:15:15'),
+	(2, 15, '2018-11-29 15:15:15', '2018-12-29 15:15:15');
+
+INSERT INTO BookBorrowings (user_id, book_copy_id, checkout_date, due_date, return_date) VALUES
+	(1, 3, '2018-11-01 15:15:15', '2018-12-01 15:15:15', '2018-11-30 15:15:15'),
+	(2, 4, '2018-11-02 15:15:15', '2018-12-02 15:15:15', '2018-12-03 15:15:15');
