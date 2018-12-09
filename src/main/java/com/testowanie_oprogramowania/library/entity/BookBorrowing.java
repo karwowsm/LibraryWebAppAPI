@@ -80,6 +80,8 @@ public class BookBorrowing implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         BookBorrowing that = (BookBorrowing) o;
         return Objects.equals(id, that.id) &&
+                Objects.equals(user, that.user) &&
+                Objects.equals(bookCopy, that.bookCopy) &&
                 Objects.equals(checkoutDate, that.checkoutDate) &&
                 Objects.equals(dueDate, that.dueDate) &&
                 Objects.equals(returnDate, that.returnDate);

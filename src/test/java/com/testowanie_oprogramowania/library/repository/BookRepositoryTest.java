@@ -67,7 +67,7 @@ public class BookRepositoryTest {
     @Test
     public void testFindAll() {
         List<Book> books = (List<Book>) bookRepository.findAll();
-        assertEquals(books.size(), 15);
+        assertEquals(15, books.size());
     }
 
     @Test
@@ -109,67 +109,67 @@ public class BookRepositoryTest {
         newBook.setName("Muzyka duszy");
         newBook.setPublishDate(1994);
         bookRepository.save(newBook);
-        assertEquals(bookRepository.count(), 16);
+        assertEquals(16, bookRepository.count());
     }
 
     @Test
     public void testFindByNameContaining_atTheBeginning_beginningWithUpperCase() {
         List<Book> books = bookRepository.findByNameContaining("Harry");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_atTheBeginning_allLowerCase() {
         List<Book> books = bookRepository.findByNameContaining("harry");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_atTheBeginning_allUpperCase() {
         List<Book> books = bookRepository.findByNameContaining("HARRY");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_atTheBeginning_mixedCase_beginningWithLowerCase() {
         List<Book> books = bookRepository.findByNameContaining("hArRy");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_atTheBeginning_mixedCase_beginningWithUpperCase() {
         List<Book> books = bookRepository.findByNameContaining("HaRrY");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_inTheMiddle_beginningWithUpperCase() {
         List<Book> books = bookRepository.findByNameContaining("Potter");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_inTheMiddle_allLowerCase() {
         List<Book> books = bookRepository.findByNameContaining("potter");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_inTheMiddle_allUpperCase() {
         List<Book> books = bookRepository.findByNameContaining("POTTER");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_inTheMiddle_mixedCase_beginningWithLowerCase() {
         List<Book> books = bookRepository.findByNameContaining("pOtTeR");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test
     public void testFindByNameContaining_inTheMiddle_mixedCase_beginningWithUpperCase() {
         List<Book> books = bookRepository.findByNameContaining("PoTtEr");
-        assertEquals(books, harryPotterBooks);
+        assertEquals(harryPotterBooks, books);
     }
 
     @Test

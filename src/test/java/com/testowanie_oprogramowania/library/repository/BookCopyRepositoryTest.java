@@ -53,22 +53,9 @@ public class BookCopyRepositoryTest {
     }
 
     @Test
-    public void testDeleteAll() {
-        bookCopyRepository.deleteAll();
-        assertEquals(bookCopyRepository.count(), 0);
-    }
-
-    @Test
-    public void testDeleteById() {
-        Long id = new Long(1);
-        bookCopyRepository.deleteById(id);
-        assertEquals(bookCopyRepository.existsById(id), false);
-    }
-
-    @Test
     public void testFindAll() {
         List<BookCopy> bookCopies = (List<BookCopy>) bookCopyRepository.findAll();
-        assertEquals(bookCopies.size(), 15);
+        assertEquals(15, bookCopies.size());
     }
 
     @Test
@@ -79,7 +66,7 @@ public class BookCopyRepositoryTest {
         expectedBookCopy.setBook(bookIstance);
         expectedBookCopy.setBookAvailability(Boolean.TRUE);
         BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).orElse(null);
-        assertEquals(bookCopy, expectedBookCopy);
+        assertEquals(expectedBookCopy, bookCopy);
     }
 
     @Test
@@ -96,7 +83,7 @@ public class BookCopyRepositoryTest {
         expectedBookCopies.add(expectedBookCopy1);
         expectedBookCopies.add(expectedBookCopy2);
         List<BookCopy> bookCopies = bookCopyRepository.findByBookId(bookIstance.getId());
-        assertEquals(bookCopies, expectedBookCopies);
+        assertEquals(expectedBookCopies, bookCopies);
     }
 
 }

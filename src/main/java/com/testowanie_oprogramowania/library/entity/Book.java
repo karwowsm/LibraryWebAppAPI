@@ -83,9 +83,9 @@ public class Book implements Serializable {
         }
         Book book = (Book) o;
         return Objects.equals(id, book.id)
-                && author.equals(book.author)
-                && publisher.equals(book.publisher)
-                && category.equals(book.category)
+                && Objects.equals(author, book.author)
+                && Objects.equals(publisher, book.publisher)
+                && Objects.equals(category, book.category)
                 && Objects.equals(name, book.name)
                 && Objects.equals(publishDate, book.publishDate);
     }

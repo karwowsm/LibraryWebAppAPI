@@ -48,6 +48,7 @@ public class BookCopy implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         BookCopy bookcopy = (BookCopy) o;
         return Objects.equals(id, bookcopy.id) &&
+                Objects.equals(book, bookcopy.book) &&
                 Objects.equals(bookAvailability, bookcopy.bookAvailability);
     }
 

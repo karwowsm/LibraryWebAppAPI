@@ -103,7 +103,7 @@ public class BookServiceImplTest {
     public void testGetAllBooks() {
         when(bookRepository.findAll()).thenReturn(books);
         List<Book> foundBooks = bookService.getAllBooks();
-        assertEquals(foundBooks, books);
+        assertEquals(books, foundBooks);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class BookServiceImplTest {
         when(bookRepository.findById(book.getId()))
                 .thenReturn(Optional.of(book));
         Book foundBook = bookService.getBook(book.getId());
-        assertEquals(foundBook, book);
+        assertEquals(book, foundBook);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class BookServiceImplTest {
         when(bookRepository.findByNameContaining(Mockito.anyString()))
                 .thenReturn(books);
         List<Book> foundBooks = bookService.searchBook(Mockito.anyString());
-        assertEquals(foundBooks, books);
+        assertEquals(books, foundBooks);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class BookServiceImplTest {
         when(bookCopyRepository.findByBookId(Mockito.anyLong()))
                 .thenReturn(bookCopies);
         List<BookCopy> foundBookCopies = bookService.getCopies(Mockito.anyLong());
-        assertEquals(foundBookCopies, bookCopies);
+        assertEquals(bookCopies, foundBookCopies);
     }
 
     @Test
