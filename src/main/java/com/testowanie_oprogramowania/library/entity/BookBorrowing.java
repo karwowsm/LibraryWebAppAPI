@@ -89,6 +89,6 @@ public class BookBorrowing implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, checkoutDate, returnDate, dueDate);
+        return Objects.hash(id, user, bookCopy, checkoutDate, dueDate, returnDate);
     }
 }

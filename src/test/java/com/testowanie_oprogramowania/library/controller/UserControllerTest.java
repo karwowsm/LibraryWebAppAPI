@@ -144,7 +144,7 @@ public class UserControllerTest {
         bookBorrowings.add(bookBorrowing1);
         bookBorrowings.add(bookBorrowing2);
     }
-    
+
     @Test
     public void testGetBorrowings_existing() throws Exception {
         User user = users.get(0);
@@ -187,5 +187,5 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", empty()));
     }
-    
+
 }

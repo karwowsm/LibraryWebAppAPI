@@ -101,10 +101,10 @@ public class BookBorrowingRepositoryTest {
         expectedBookBorrowing.setUser(userInstance);
         expectedBookBorrowing.setBookCopy(bookCopyInstance);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-        long checkoutDateTimestamp = dateFormat.parse("01/12/2018 15:15:15").getTime();
-        expectedBookBorrowing.setCheckoutDate(new Timestamp(checkoutDateTimestamp));
-        long dueDateTimestamp = dateFormat.parse("01/01/2019 15:15:15").getTime();
-        expectedBookBorrowing.setDueDate(new Timestamp(dueDateTimestamp));
+        long timeStamp = dateFormat.parse("01/12/2018 15:15:15").getTime();
+        expectedBookBorrowing.setCheckoutDate(new Timestamp(timeStamp));
+        timeStamp = dateFormat.parse("01/01/2019 15:15:15").getTime();
+        expectedBookBorrowing.setDueDate(new Timestamp(timeStamp));
         expectedBookBorrowing.setReturnDate(null);
         BookBorrowing bookBorrowing = bookBorrowingRepository.findById(bookBorrowingId).orElse(null);
         assertEquals(expectedBookBorrowing, bookBorrowing);

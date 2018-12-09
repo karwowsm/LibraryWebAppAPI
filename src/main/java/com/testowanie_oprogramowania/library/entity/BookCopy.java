@@ -54,6 +54,6 @@ public class BookCopy implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookAvailability);
+        return Objects.hash(id, book, bookAvailability);
     }
 }
