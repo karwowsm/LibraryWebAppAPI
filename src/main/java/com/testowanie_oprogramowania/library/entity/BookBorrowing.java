@@ -1,20 +1,31 @@
 package com.testowanie_oprogramowania.library.entity;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "bookborrowings")
-public class Bookborrowing {
-
-    private Long id;
-    private Timestamp checkoutDate;
-    private Timestamp returnDate;
-    private Timestamp dueDate;
+public class BookBorrowing implements Serializable {
 
     @Id
     @Column(name = "ID")
+    private Long id;
+    @ManyToOne
+    private User user;
+    @ManyToOne
+    private BookCopy bookCopy;
+    @Basic
+    @Column(name = "checkout_date")
+    private Timestamp checkoutDate;
+    @Basic
+    @Column(name = "due_date")
+    private Timestamp dueDate;
+    @Basic
+    @Column(name = "return_date")
+    private Timestamp returnDate;
+
     public Long getId() {
         return id;
     }
@@ -23,8 +34,22 @@ public class Bookborrowing {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "checkout_date")
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public BookCopy getBookCopy() {
+        return bookCopy;
+    }
+
+    public void setBookCopy(BookCopy bookCopy) {
+        this.bookCopy = bookCopy;
+    }
+
     public Timestamp getCheckoutDate() {
         return checkoutDate;
     }
@@ -33,18 +58,6 @@ public class Bookborrowing {
         this.checkoutDate = checkoutDate;
     }
 
-    @Basic
-    @Column(name = "return_date")
-    public Timestamp getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(Timestamp returnDate) {
-        this.returnDate = returnDate;
-    }
-
-    @Basic
-    @Column(name = "due_date")
     public Timestamp getDueDate() {
         return dueDate;
     }
@@ -53,15 +66,23 @@ public class Bookborrowing {
         this.dueDate = dueDate;
     }
 
+    public Timestamp getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Timestamp returnDate) {
+        this.returnDate = returnDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Bookborrowing that = (Bookborrowing) o;
-        return id == that.id &&
+        BookBorrowing that = (BookBorrowing) o;
+        return Objects.equals(id, that.id) &&
                 Objects.equals(checkoutDate, that.checkoutDate) &&
-                Objects.equals(returnDate, that.returnDate) &&
-                Objects.equals(dueDate, that.dueDate);
+                Objects.equals(dueDate, that.dueDate) &&
+                Objects.equals(returnDate, that.returnDate);
     }
 
     @Override
