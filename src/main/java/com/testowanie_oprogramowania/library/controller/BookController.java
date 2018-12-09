@@ -24,8 +24,8 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        return new ResponseEntity(bookService.getAllBooks(), HttpStatus.OK);
+    public List<Book> getAllBooks() {
+        return bookService.getAllBooks();
     }
 
     @GetMapping("/{id}")
@@ -47,8 +47,8 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Book>> searchBook(@RequestParam("q") String q) {
-        return new ResponseEntity(bookService.searchBook(q), HttpStatus.OK);
+    public List<Book> searchBook(@RequestParam("q") String q) {
+        return bookService.searchBook(q);
     }
 
 }

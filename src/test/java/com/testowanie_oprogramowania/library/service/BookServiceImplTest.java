@@ -133,17 +133,19 @@ public class BookServiceImplTest {
 
     @Test
     public void testGetCopies_existing() {
-        when(bookCopyRepository.findByBookId(Mockito.anyLong()))
+        Long bookId = Mockito.anyLong();
+        when(bookCopyRepository.findByBookId(bookId))
                 .thenReturn(bookCopies);
-        List<BookCopy> foundBookCopies = bookService.getCopies(Mockito.anyLong());
+        List<BookCopy> foundBookCopies = bookService.getCopies(bookId);
         assertEquals(bookCopies, foundBookCopies);
     }
 
     @Test
     public void testGetCopies_notExisting() {
-        when(bookCopyRepository.findByBookId(Mockito.anyLong()))
+        Long bookId = Mockito.anyLong();
+        when(bookCopyRepository.findByBookId(bookId))
                 .thenReturn(Collections.emptyList());
-        List<BookCopy> foundBookCopies = bookService.getCopies(Mockito.anyLong());
+        List<BookCopy> foundBookCopies = bookService.getCopies(bookId);
         assertTrue(foundBookCopies.isEmpty());
     }
 
