@@ -140,3 +140,8 @@ INSERT INTO BookCopy (book_id, book_availability) VALUES
 	(13, FALSE),
 	(14, FALSE),
 	(15, FALSE);
+
+INSERT INTO Users (name, surname, email, birth_date, pesel, login, password) VALUES
+  ('Jan', 'Kowalski', 'jan@gmail.com', '1995-12-10', '951210111111', 'jan123', '$2a$04$GE4HJltZyWqEI8eJ19bK..exCVhHHa49v3H64HstBw3Tz7zZfpB8i'),
+  ('Adam', 'Nowak', 'adam@gmail.com', '1992-10-02', '921002333333', 'adam123', '$2a$04$GE4HJltZyWqEI8eJ19bK..exCVhHHa49v3H64HstBw3Tz7zZfpB8i'),
+  ('Adam', 'Adamowski', 'adam123@gmail.com', '2000-10-10', '921412111111', 'adam12345', '$2a$04$GE4HJltZyWqEI8eJ19bK..exCVhHHa49v3H64HstBw3Tz7zZfpB8i');

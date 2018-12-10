@@ -43,4 +43,12 @@ public class Bookcopy {
     public int hashCode() {
         return Objects.hash(id, bookAvailability);
     }
+
+    @Override
+    public String toString() {
+        return "Bookcopy{" +
+                "id=" + id +
+                ", bookAvailability=" + bookAvailability +
+                '}';
+    }
 }
