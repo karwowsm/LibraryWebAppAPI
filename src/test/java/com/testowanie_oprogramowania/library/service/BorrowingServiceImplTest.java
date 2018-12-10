@@ -89,6 +89,20 @@ public class BorrowingServiceImplTest {
         borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 10000, (long) 1));
     }
 
+    @Test(expected = BookBorrowingException.class)
+    public void borrowBookUsingDatesFromPast() throws ParseException {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date parsedDate1 = dateFormat.parse("1889-12-12 12:12:12");
+        Timestamp chDate = new java.sql.Timestamp(parsedDate1.getTime());
+
+        Date parsedDate2 = dateFormat.parse("1889-12-15 14:22:11");
+        Timestamp  retDate = new java.sql.Timestamp(parsedDate2.getTime());
+
+        borrowingService.borrowBook(new Bookborrowing(chDate, retDate, (long) 1, (long) 1));
+    }
+
     @Test
     public void returnBook() throws ParseException {
         borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 1));

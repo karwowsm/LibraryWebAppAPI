@@ -28,7 +28,7 @@ public class BorrowingController {
             borrowingService.borrowBook(bookborrowing);
             return new ResponseEntity(HttpStatus.OK);
         } catch (BookBorrowingException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -38,7 +38,7 @@ public class BorrowingController {
             borrowingService.returnBook(bookCopyId);
             return new ResponseEntity(HttpStatus.OK);
         } catch (BookBorrowingException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

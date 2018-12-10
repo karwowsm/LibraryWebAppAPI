@@ -30,9 +30,16 @@ public class BorrowingServiceImpl implements BorrowingService {
     @Override
     @Transactional
     public void borrowBook(Bookborrowing bookborrowing) throws BookBorrowingException {
+
+        Timestamp actualTimestamp = new Timestamp(System.currentTimeMillis());
+
         if (bookborrowing.getCheckoutDate().after(bookborrowing.getReturnDate()) ||
                 bookborrowing.getCheckoutDate().getTime() == bookborrowing.getReturnDate().getTime()) {
             throw new BookBorrowingException("Book return date have to be bigger than checkout date");
+        }
+        if (bookborrowing.getCheckoutDate().getTime() < actualTimestamp.getTime() ||
+                bookborrowing.getReturnDate().getTime() < actualTimestamp.getTime()) {
+            throw new BookBorrowingException("Book return date and checkout date have to be bigger than actual date");
         }
         if (bookcopyService.getBookcopyById(bookborrowing.getBookCopyId()) == null) {
             throw new BookBorrowingException("Book copy with given id doesn't exist");
