@@ -1,11 +1,12 @@
 package com.testowanie_oprogramowania.library.entity;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "author")
-public class Author {
+public class Author implements Serializable {
 
     private Long id;
     private String name;
@@ -46,7 +47,7 @@ public class Author {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
-        return id == author.id &&
+        return Objects.equals(id, author.id) &&
                 Objects.equals(name, author.name) &&
                 Objects.equals(surname, author.surname);
     }

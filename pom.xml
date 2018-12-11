@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>Library</name>
-    <description>Test Driven Development University project</description>
+    <description>Test Driven Development University group project</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -34,10 +34,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
