@@ -1,8 +1,8 @@
 package com.testowanie_oprogramowania.library.controller;
 
-import com.testowanie_oprogramowania.library.entity.Bookborrowing;
+import com.testowanie_oprogramowania.library.entity.BookBorrowing;
 import com.testowanie_oprogramowania.library.error.BookBorrowingException;
-import com.testowanie_oprogramowania.library.service.BookcopyService;
+import com.testowanie_oprogramowania.library.service.BookCopyService;
 import com.testowanie_oprogramowania.library.service.BorrowingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +20,12 @@ public class BorrowingController {
 
 
     @Autowired
-    private BookcopyService bookcopyService;
+    private BookCopyService bookCopyService;
 
     @PostMapping(value = "/borrow")
-    public ResponseEntity borrowBook(@RequestBody Bookborrowing bookborrowing) {
+    public ResponseEntity borrowBook(@RequestBody BookBorrowing bookBorrowing) {
         try {
-            borrowingService.borrowBook(bookborrowing);
+            borrowingService.borrowBook(bookBorrowing);
             return new ResponseEntity(HttpStatus.OK);
         } catch (BookBorrowingException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -43,7 +43,7 @@ public class BorrowingController {
     }
 
     @GetMapping(value = "/borrowings")
-    public List<Bookborrowing> getAllBookBorrowing() {
+    public List<BookBorrowing> getAllBookBorrowing() {
         return borrowingService.getAllBookborrowings();
     }
 

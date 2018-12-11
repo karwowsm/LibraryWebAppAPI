@@ -2,19 +2,25 @@ package com.testowanie_oprogramowania.library.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.testowanie_oprogramowania.library.entity.Bookborrowing;
+import com.testowanie_oprogramowania.library.entity.BookBorrowing;
 import com.testowanie_oprogramowania.library.error.BookBorrowingException;
+import com.testowanie_oprogramowania.library.service.BookCopyService;
 import com.testowanie_oprogramowania.library.service.BorrowingService;
+import com.testowanie_oprogramowania.library.service.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,21 +31,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 public class BorrowingControllerTest {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
+    private BookCopyService bookCopyService;
 
     @Mock
     private BorrowingService borrowingService;
@@ -51,7 +59,7 @@ public class BorrowingControllerTest {
 
     private static Timestamp checkoutDate;
 
-    private static Timestamp returnDate;
+    private static Timestamp dueDate;
 
     @Before
     public void setUp() {
@@ -67,16 +75,17 @@ public class BorrowingControllerTest {
         checkoutDate = new java.sql.Timestamp(parsedDate1.getTime());
 
         Date parsedDate2 = dateFormat.parse("2018-12-15 14:22:11");
-        returnDate = new java.sql.Timestamp(parsedDate2.getTime());
+        dueDate = new java.sql.Timestamp(parsedDate2.getTime());
 
     }
 
     @Test
     public void borrowBook() throws Exception {
-        Bookborrowing bookborrowing = new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 1);
+        BookBorrowing bookBorrowing = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String jsonBookborrowing = ow.writeValueAsString(bookborrowing);
+        String jsonBookborrowing = ow.writeValueAsString(bookBorrowing);
 
         mockMvc.perform(post("/books/borrow")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,12 +96,13 @@ public class BorrowingControllerTest {
 
     @Test
     public void borrowUnavailableBook() throws Exception {
-        Bookborrowing bookborrowing = new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 1);
+        BookBorrowing bookBorrowing = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
 
-        doThrow(new BookBorrowingException()).when(borrowingService).borrowBook(bookborrowing);
+        doThrow(new BookBorrowingException()).when(borrowingService).borrowBook(bookBorrowing);
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String jsonBookBorrowing = ow.writeValueAsString(bookborrowing);
+        String jsonBookBorrowing = ow.writeValueAsString(bookBorrowing);
 
         mockMvc.perform(post("/books/borrow")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -121,33 +131,28 @@ public class BorrowingControllerTest {
 
     @Test
     public void getAllBookBorrowing() throws Exception {
-        Bookborrowing bookborrowing1 = new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 1);
-        Bookborrowing bookborrowing2 = new Bookborrowing(checkoutDate, returnDate, (long) 2, (long) 2);
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
 
-        bookborrowing1.setId((long) 1);
-        bookborrowing2.setId((long) 2);
+        BookBorrowing bookBorrowing2 = new BookBorrowing(userService.getUserById((long) 2),
+                bookCopyService.getBookcopyById((long) 4), checkoutDate, dueDate);
 
-        List<Bookborrowing> bookBorrowingList = new ArrayList<>();
-        bookBorrowingList.add(bookborrowing1);
-        bookBorrowingList.add(bookborrowing2);
+        bookBorrowing1.setId((long) 1);
+        bookBorrowing2.setId((long) 2);
+
+        List<BookBorrowing> bookBorrowingList = new ArrayList<>();
+        bookBorrowingList.add(bookBorrowing1);
+        bookBorrowingList.add(bookBorrowing2);
 
         when(borrowingService.getAllBookborrowings()).thenReturn(bookBorrowingList);
 
-        mockMvc.perform(get("/books/borrowings")
+        MvcResult result = mockMvc.perform(get("/books/borrowings")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].checkoutDate", is("2018-12-11 12:12:12")))
-                .andExpect(jsonPath("$[0].returnDate", is("2018-12-15 14:22:11")))
-                .andExpect(jsonPath("$[0].dueDate", is(nullValue())))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].bookCopyId", is(1)))
-                .andExpect(jsonPath("$[1].id", is(2)))
-                .andExpect(jsonPath("$[1].checkoutDate", is("2018-12-11 12:12:12")))
-                .andExpect(jsonPath("$[1].returnDate", is("2018-12-15 14:22:11")))
-                .andExpect(jsonPath("$[1].dueDate", is(nullValue())))
-                .andExpect(jsonPath("$[1].userId", is(2)))
-                .andExpect(jsonPath("$[1].bookCopyId", is(2)));
+                .andReturn();
+
+        JSONAssert.assertEquals(objectMapper.writeValueAsString(bookBorrowingList),
+                result.getResponse().getContentAsString(), JSONCompareMode.STRICT);
     }
 
 }

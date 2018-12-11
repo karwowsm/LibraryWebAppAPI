@@ -1,8 +1,10 @@
 package com.testowanie_oprogramowania.library.service;
 
-import com.testowanie_oprogramowania.library.entity.Bookborrowing;
-import com.testowanie_oprogramowania.library.entity.Bookcopy;
+import com.testowanie_oprogramowania.library.entity.BookBorrowing;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
+import com.testowanie_oprogramowania.library.entity.User;
 import com.testowanie_oprogramowania.library.error.BookBorrowingException;
+import com.testowanie_oprogramowania.library.repository.BookBorrowingRepository;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,12 +28,19 @@ public class BorrowingServiceImplTest {
     @Autowired
     private BorrowingService borrowingService;
 
+
     @Autowired
-    private BookcopyService bookcopyService;
+    private BookBorrowingRepository bookBorrowingRepository;
+
+    @Autowired
+    private BookCopyService bookCopyService;
+
+    @Autowired
+    private UserService userService;
 
     private static Timestamp checkoutDate;
 
-    private static Timestamp returnDate;
+    private static Timestamp dueDate;
 
     @BeforeClass
     public static void initialize() throws ParseException {
@@ -41,7 +50,7 @@ public class BorrowingServiceImplTest {
         checkoutDate = new java.sql.Timestamp(parsedDate1.getTime());
 
         Date parsedDate2 = dateFormat.parse("2018-12-15 14:22:11");
-        returnDate = new java.sql.Timestamp(parsedDate2.getTime());
+        dueDate = new java.sql.Timestamp(parsedDate2.getTime());
     }
 
 
@@ -49,44 +58,67 @@ public class BorrowingServiceImplTest {
     public void borrowAvailableBook() throws ParseException {
         int borrowingCountBeforeBorrow = borrowingService.getAllBookborrowings().size();
 
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 1));
+
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
 
         int borrowingCountAfterBorrow = borrowingService.getAllBookborrowings().size();
 
         assertEquals(borrowingCountBeforeBorrow + 1, borrowingCountAfterBorrow);
 
-        System.out.println(bookcopyService.getBookcopyById((long) 1).toString());
-
-        for (Bookborrowing bs : borrowingService.getAllBookborrowings()) {
+        for (BookBorrowing bs : borrowingService.getAllBookborrowings()) {
             System.out.println(bs.toString());
         }
 
-        assertFalse(bookcopyService.getBookcopyById((long) 1).getBookAvailability());
+        assertFalse(bookCopyService.getBookcopyById((long) 1).getBookAvailability());
     }
 
     @Test(expected = BookBorrowingException.class)
     public void borrowUnavailableBook() {
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 10));
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 12), checkoutDate, dueDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
     }
 
     @Test(expected = BookBorrowingException.class)
     public void borrowBookUsingCheckoutDateHigherThanReturnDate() {
-        borrowingService.borrowBook(new Bookborrowing(returnDate, checkoutDate, (long) 1, (long) 1));
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), dueDate, checkoutDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
     }
 
     @Test(expected = BookBorrowingException.class)
     public void borrowBookUsingCheckoutDateEqualReturnDate() {
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, checkoutDate, (long) 1, (long) 1));
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, checkoutDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
     }
 
     @Test(expected = BookBorrowingException.class)
     public void borrowBookUsingNonexistentBookCopyId() throws ParseException {
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 10000));
+        BookCopy bookCopy = bookCopyService.getBookcopyById((long) 1);
+        bookCopy.setId((long) 1000);
+
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopy, checkoutDate, dueDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
     }
 
     @Test(expected = BookBorrowingException.class)
     public void borrowBookUsingNonexistentUserId() throws ParseException {
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 10000, (long) 1));
+        User user = userService.getUserById((long) 1);
+        user.setId((long) 1000);
+
+        BookBorrowing bookBorrowing1 = new BookBorrowing(user,
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
     }
 
     @Test(expected = BookBorrowingException.class)
@@ -98,18 +130,25 @@ public class BorrowingServiceImplTest {
         Timestamp chDate = new java.sql.Timestamp(parsedDate1.getTime());
 
         Date parsedDate2 = dateFormat.parse("1889-12-15 14:22:11");
-        Timestamp  retDate = new java.sql.Timestamp(parsedDate2.getTime());
+        Timestamp duDate = new java.sql.Timestamp(parsedDate2.getTime());
 
-        borrowingService.borrowBook(new Bookborrowing(chDate, retDate, (long) 1, (long) 1));
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), chDate, duDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
     }
 
     @Test
     public void returnBook() throws ParseException {
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 1));
-        assertFalse(bookcopyService.getBookcopyById((long) 1).getBookAvailability());
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
+
+        assertFalse(bookCopyService.getBookcopyById((long) 1).getBookAvailability());
 
         borrowingService.returnBook((long) 1);
-        assertTrue(bookcopyService.getBookcopyById((long) 1).getBookAvailability());
+        assertTrue(bookCopyService.getBookcopyById((long) 1).getBookAvailability());
 
         assertTrue(borrowingService.getBookborrowingById(borrowingService.getAllBookborrowings().get(0).getId()).getDueDate() != null);
     }
@@ -121,9 +160,20 @@ public class BorrowingServiceImplTest {
 
     @Test
     public void getAllBookborrowings() {
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 1));
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 2));
-        borrowingService.borrowBook(new Bookborrowing(checkoutDate, returnDate, (long) 1, (long) 3));
+        bookBorrowingRepository.deleteAll();
+
+        BookBorrowing bookBorrowing1 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
+
+        BookBorrowing bookBorrowing2 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 5), checkoutDate, dueDate);
+
+        BookBorrowing bookBorrowing3 = new BookBorrowing(userService.getUserById((long) 1),
+                bookCopyService.getBookcopyById((long) 7), checkoutDate, dueDate);
+
+        borrowingService.borrowBook(bookBorrowing1);
+        borrowingService.borrowBook(bookBorrowing2);
+        borrowingService.borrowBook(bookBorrowing3);
 
         borrowingService.getAllBookborrowings();
 

@@ -1,11 +1,12 @@
 package com.testowanie_oprogramowania.library.entity;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "publisher")
-public class Publisher {
+public class Publisher implements Serializable {
 
     private Long id;
     private String name;
@@ -35,7 +36,7 @@ public class Publisher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Publisher publisher = (Publisher) o;
-        return id == publisher.id &&
+        return Objects.equals(id, publisher.id) &&
                 Objects.equals(name, publisher.name);
     }
 

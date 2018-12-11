@@ -1,5 +1,7 @@
 package com.testowanie_oprogramowania.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -59,6 +61,7 @@ public class User {
 
     @Basic
     @Column(name = "birth_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
     public Date getBirthDate() {
         return birthDate;
     }
@@ -102,7 +105,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User users = (User) o;
-        return id == users.id &&
+        return Objects.equals(id, users.id) &&
                 Objects.equals(name, users.name) &&
                 Objects.equals(surname, users.surname) &&
                 Objects.equals(email, users.email) &&

@@ -1,10 +1,10 @@
 package com.testowanie_oprogramowania.library.service;
 
-import com.testowanie_oprogramowania.library.entity.Bookborrowing;
-import com.testowanie_oprogramowania.library.entity.Bookcopy;
+import com.testowanie_oprogramowania.library.entity.BookBorrowing;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
 import com.testowanie_oprogramowania.library.error.BookBorrowingException;
-import com.testowanie_oprogramowania.library.repository.BookborrowingRepository;
-import com.testowanie_oprogramowania.library.repository.BookcopyRepository;
+import com.testowanie_oprogramowania.library.repository.BookBorrowingRepository;
+import com.testowanie_oprogramowania.library.repository.BookCopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,79 +16,79 @@ import java.util.List;
 public class BorrowingServiceImpl implements BorrowingService {
 
     @Autowired
-    private BookborrowingRepository bookborrowingRepository;
+    private BookBorrowingRepository bookBorrowingRepository;
 
     @Autowired
-    private BookcopyRepository bookcopyRepository;
+    private BookCopyRepository bookCopyRepository;
 
     @Autowired
-    private BookcopyService bookcopyService;
+    private BookCopyService bookCopyService;
 
     @Autowired
     private UserService userService;
 
     @Override
     @Transactional
-    public void borrowBook(Bookborrowing bookborrowing) throws BookBorrowingException {
+    public void borrowBook(BookBorrowing bookBorrowing) throws BookBorrowingException {
 
         Timestamp actualTimestamp = new Timestamp(System.currentTimeMillis());
 
-        if (bookborrowing.getCheckoutDate().after(bookborrowing.getReturnDate()) ||
-                bookborrowing.getCheckoutDate().getTime() == bookborrowing.getReturnDate().getTime()) {
-            throw new BookBorrowingException("Book return date have to be bigger than checkout date");
+        if (bookBorrowing.getCheckoutDate().after(bookBorrowing.getDueDate()) ||
+                bookBorrowing.getCheckoutDate().getTime() == bookBorrowing.getDueDate().getTime()) {
+            throw new BookBorrowingException("Book due date have to be bigger than checkout date");
         }
-        if (bookborrowing.getCheckoutDate().getTime() < actualTimestamp.getTime() ||
-                bookborrowing.getReturnDate().getTime() < actualTimestamp.getTime()) {
-            throw new BookBorrowingException("Book return date and checkout date have to be bigger than actual date");
+        if (bookBorrowing.getCheckoutDate().getTime() < actualTimestamp.getTime() ||
+                bookBorrowing.getDueDate().getTime() < actualTimestamp.getTime()) {
+            throw new BookBorrowingException("Book due date and checkout date have to be bigger than actual date");
         }
-        if (bookcopyService.getBookcopyById(bookborrowing.getBookCopyId()) == null) {
+        if (bookCopyService.getBookcopyById(bookBorrowing.getBookCopy().getId()) == null) {
             throw new BookBorrowingException("Book copy with given id doesn't exist");
         }
-        if (userService.getUserById(bookborrowing.getUserId()) == null) {
+        if (userService.getUserById(bookBorrowing.getUser().getId()) == null) {
             throw new BookBorrowingException("User with given id doesn't exist");
         }
-        if (bookcopyService.getBookcopyById(bookborrowing.getBookCopyId()).getBookAvailability() == false) {
+        if (bookCopyService.getBookcopyById(bookBorrowing.getBookCopy().getId()).getBookAvailability() == false) {
             throw new BookBorrowingException("Cannot borrow unavailable book copy");
         }
 
-        bookborrowingRepository.save(bookborrowing);
+        bookBorrowingRepository.save(bookBorrowing);
 
-        Bookcopy bookcopy = bookcopyService.getBookcopyById(bookborrowing.getBookCopyId());
+        BookCopy bookcopy = bookCopyService.getBookcopyById(bookBorrowing.getBookCopy().getId());
         bookcopy.setBookAvailability(false);
 
-        bookcopyRepository.save(bookcopy);
+        bookCopyRepository.save(bookcopy);
     }
 
     @Override
     @Transactional
     public void returnBook(Long bookCopyId) throws BookBorrowingException {
-        Bookcopy bookcopy = bookcopyService.getBookcopyById(bookCopyId);
+        BookCopy bookCopy = bookCopyService.getBookcopyById(bookCopyId);
 
-        if (bookcopy.getBookAvailability() == true) {
+        if (bookCopy.getBookAvailability() == true) {
             throw new BookBorrowingException("Cannot return available book copy");
         }
 
-        bookcopy.setBookAvailability(true);
-        bookcopyRepository.save(bookcopy);
+        bookCopy.setBookAvailability(true);
+        bookCopyRepository.save(bookCopy);
 
-        Bookborrowing bookborrowing = bookborrowingRepository.getNotReturnedBookBorrowingByBookCopyId(bookCopyId);
+        BookBorrowing bookBorrowing = bookBorrowingRepository.getNotReturnedBookBorrowingByBookCopyId(bookCopyId);
 
-        if (bookborrowing.getDueDate() != null) {
+        if (bookBorrowing.getReturnDate() != null) {
             throw new BookBorrowingException("Cannot return book, which was returned earlier");
         }
 
-        bookborrowing.setDueDate(new Timestamp(System.currentTimeMillis()));
+        bookBorrowing.setReturnDate(new Timestamp(System.currentTimeMillis()));
 
-        bookborrowingRepository.save(bookborrowing);
+        bookBorrowingRepository.save(bookBorrowing);
     }
 
     @Override
-    public List<Bookborrowing> getAllBookborrowings() {
-        return bookborrowingRepository.findAll();
+    public List<BookBorrowing> getAllBookborrowings() {
+        return (List<BookBorrowing>) bookBorrowingRepository.findAll();
     }
 
     @Override
-    public Bookborrowing getBookborrowingById(Long bookCopyId) {
-        return bookborrowingRepository.findById(bookCopyId).orElse(null);
+    public BookBorrowing getBookborrowingById(Long bookCopyId) {
+        return bookBorrowingRepository.findById(bookCopyId).orElse(null);
     }
 }

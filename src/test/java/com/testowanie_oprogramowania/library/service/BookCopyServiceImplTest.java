@@ -1,6 +1,6 @@
 package com.testowanie_oprogramowania.library.service;
 
-import com.testowanie_oprogramowania.library.entity.Bookcopy;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +13,21 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class BookcopyServiceImplTest {
+public class BookCopyServiceImplTest {
 
     @Autowired
-    BookcopyService bookcopyService;
+    BookCopyService bookCopyService;
 
+    @Autowired
+    BookService bookService;
 
     @Test
     public void getBookcopyById() {
-        Bookcopy bookcopy = new Bookcopy();
+        BookCopy bookcopy = new BookCopy();
         bookcopy.setId((long) 1);
+        bookcopy.setBook(bookService.getBook((long) 1));
         bookcopy.setBookAvailability(true);
 
-        assertEquals(bookcopy, bookcopyService.getBookcopyById((long) 1));
+        assertEquals(bookcopy, bookCopyService.getBookcopyById((long) 1));
     }
 }
