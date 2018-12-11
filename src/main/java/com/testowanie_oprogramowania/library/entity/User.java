@@ -102,7 +102,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User users = (User) o;
-        return id == users.id &&
+        return Objects.equals(id, users.id) &&
                 Objects.equals(name, users.name) &&
                 Objects.equals(surname, users.surname) &&
                 Objects.equals(email, users.email) &&

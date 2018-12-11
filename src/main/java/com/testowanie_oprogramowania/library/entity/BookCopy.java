@@ -1,17 +1,23 @@
 package com.testowanie_oprogramowania.library.entity;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "bookcopy")
-public class Bookcopy {
-
-    private Long id;
-    private Boolean bookAvailability;
+public class BookCopy implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
+    private Long id;
+    @ManyToOne
+    private Book book;
+    @Basic
+    @Column(name = "book_availability")
+    private Boolean bookAvailability;
+
     public Long getId() {
         return id;
     }
@@ -20,8 +26,14 @@ public class Bookcopy {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "book_availability")
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
     public Boolean getBookAvailability() {
         return bookAvailability;
     }
@@ -34,13 +46,14 @@ public class Bookcopy {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Bookcopy bookcopy = (Bookcopy) o;
-        return id == bookcopy.id &&
+        BookCopy bookcopy = (BookCopy) o;
+        return Objects.equals(id, bookcopy.id) &&
+                Objects.equals(book, bookcopy.book) &&
                 Objects.equals(bookAvailability, bookcopy.bookAvailability);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bookAvailability);
+        return Objects.hash(id, book, bookAvailability);
     }
 }
