@@ -2,6 +2,7 @@ package com.testowanie_oprogramowania.library.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 import java.sql.Date;
