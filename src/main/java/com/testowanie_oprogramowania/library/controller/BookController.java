@@ -43,7 +43,7 @@ public class BookController {
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Long id) {
         Book book = bookService.getBook(id);
         if (book != null) {

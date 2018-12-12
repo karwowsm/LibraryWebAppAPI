@@ -208,8 +208,7 @@ public class BookControllerTest {
     public void testDelete_existing() throws Exception {
         Book book = books.get(0);
         given(bookService.getBook(book.getId())).willReturn(book);
-        String path = basePath.concat("/").concat(String.valueOf(book.getId()))
-                .concat("/delete");
+        String path = basePath.concat("/").concat(String.valueOf(book.getId()));
         this.mockMvc.perform(MockMvcRequestBuilders
                 .delete(path)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -219,8 +218,7 @@ public class BookControllerTest {
 
     @Test
     public void testDelete_badRequest() throws Exception {
-        String path = basePath.concat("/").concat("NaN")
-                .concat("/delete");
+        String path = basePath.concat("/").concat("NaN");
         this.mockMvc.perform(MockMvcRequestBuilders
                 .delete(path)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -232,8 +230,7 @@ public class BookControllerTest {
     public void testDelete_notExistingBook() throws Exception {
         Long bookId = new Long(18);
         given(bookService.getBook(bookId)).willReturn(null);
-        String path = basePath.concat("/").concat(bookId.toString())
-                .concat("/delete");
+        String path = basePath.concat("/").concat(bookId.toString());
         this.mockMvc.perform(MockMvcRequestBuilders
                 .delete(path)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -244,7 +241,6 @@ public class BookControllerTest {
     @Test
     public void addBookTest() throws Exception {
         Book book = books.get(0);
-        given(bookService.getBook(book.getId())).willReturn(book);
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String jsonBook = ow.writeValueAsString(book);
         mockMvc.perform(post("/books")
@@ -254,10 +250,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void addBookTest_notExist() throws Exception {
-        Book book = null;
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String jsonBook = ow.writeValueAsString(book);
+    public void addBookTest_withoutBody() throws Exception {
         mockMvc.perform(post("/books")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
