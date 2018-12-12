@@ -1,18 +1,18 @@
 package com.testowanie_oprogramowania.library.service;
 
-import com.testowanie_oprogramowania.library.entity.Bookcopy;
-import com.testowanie_oprogramowania.library.repository.BookcopyRepository;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
+import com.testowanie_oprogramowania.library.repository.BookCopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BookcopyServiceImpl implements BookcopyService {
+public class BookCopyServiceImpl implements BookCopyService {
 
     @Autowired
-    private BookcopyRepository bookcopyRepository;
+    private BookCopyRepository bookCopyRepository;
 
     @Override
-    public Bookcopy getBookcopyById(Long id) {
-        return bookcopyRepository.findById(id).orElse(null);
+    public BookCopy getBookcopyById(Long id) {
+        return bookCopyRepository.findById(id).orElse(null);
     }
 }

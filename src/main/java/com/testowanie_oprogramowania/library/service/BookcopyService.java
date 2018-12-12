@@ -1,9 +1,9 @@
 package com.testowanie_oprogramowania.library.service;
 
-import com.testowanie_oprogramowania.library.entity.Bookcopy;
+import com.testowanie_oprogramowania.library.entity.BookCopy;
 
-public interface BookcopyService {
+public interface BookCopyService {
 
-    Bookcopy getBookcopyById(Long id);
+    BookCopy getBookcopyById(Long id);
 
 }
