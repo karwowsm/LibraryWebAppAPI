@@ -1,33 +1,35 @@
 package com.testowanie_oprogramowania.library.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.testowanie_oprogramowania.library.entity.Author;
-import com.testowanie_oprogramowania.library.entity.Book;
-import com.testowanie_oprogramowania.library.entity.BookCopy;
-import com.testowanie_oprogramowania.library.entity.Category;
-import com.testowanie_oprogramowania.library.entity.Publisher;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.testowanie_oprogramowania.library.entity.*;
 import com.testowanie_oprogramowania.library.service.BookService;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import static org.hamcrest.Matchers.empty;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.BDDMockito.given;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.Matchers.empty;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  *
@@ -202,4 +204,62 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$", empty()));
     }
 
+    @Test
+    public void testDelete_existing() throws Exception {
+        Book book = books.get(0);
+        given(bookService.getBook(book.getId())).willReturn(book);
+        String path = basePath.concat("/").concat(String.valueOf(book.getId()))
+                .concat("/delete");
+        this.mockMvc.perform(MockMvcRequestBuilders
+                .delete(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDelete_badRequest() throws Exception {
+        String path = basePath.concat("/").concat("NaN")
+                .concat("/delete");
+        this.mockMvc.perform(MockMvcRequestBuilders
+                .delete(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testDelete_notExistingBook() throws Exception {
+        Long bookId = new Long(18);
+        given(bookService.getBook(bookId)).willReturn(null);
+        String path = basePath.concat("/").concat(bookId.toString())
+                .concat("/delete");
+        this.mockMvc.perform(MockMvcRequestBuilders
+                .delete(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void addBookTest() throws Exception {
+        Book book = books.get(0);
+        given(bookService.getBook(book.getId())).willReturn(book);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String jsonBook = ow.writeValueAsString(book);
+        mockMvc.perform(post("/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonBook))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void addBookTest_notExist() throws Exception {
+        Book book = null;
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String jsonBook = ow.writeValueAsString(book);
+        mockMvc.perform(post("/books")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
