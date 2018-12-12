@@ -156,3 +156,8 @@ INSERT INTO BookBorrowings (user_id, book_copy_id, checkout_date, due_date) VALU
 INSERT INTO BookBorrowings (user_id, book_copy_id, checkout_date, due_date, return_date) VALUES
 	(1, 3, '2018-11-01 15:15:15', '2018-12-01 15:15:15', '2018-11-30 15:15:15'),
 	(2, 4, '2018-11-02 15:15:15', '2018-12-02 15:15:15', '2018-12-03 15:15:15');
+
+INSERT INTO Users (name, surname, email, birth_date, pesel, login, password) VALUES
+  ('Jan', 'Kowalski', 'jan@gmail.com', '1995-12-10', '951210111111', 'jan123', 'qwerty'),
+  ('Adam', 'Nowak', 'adam@gmail.com', '1992-10-02', '921002333333', 'adam123', 'qwerty'),
+  ('Adam', 'Adamowski', 'adam123@gmail.com', '2000-10-10', '921412111111', 'adam12345', 'qwerty');

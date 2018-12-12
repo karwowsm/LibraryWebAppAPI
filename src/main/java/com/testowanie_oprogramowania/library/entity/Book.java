@@ -95,4 +95,15 @@ public class Book implements Serializable {
         return Objects.hash(id, author, publisher, category, name, publishDate);
     }
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", author=" + author +
+                ", publisher=" + publisher +
+                ", category=" + category +
+                ", name='" + name + '\'' +
+                ", publishDate=" + publishDate +
+                '}';
+    }
 }

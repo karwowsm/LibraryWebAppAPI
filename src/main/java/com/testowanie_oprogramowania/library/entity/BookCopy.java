@@ -56,4 +56,13 @@ public class BookCopy implements Serializable {
     public int hashCode() {
         return Objects.hash(id, book, bookAvailability);
     }
+
+    @Override
+    public String toString() {
+        return "BookCopy{" +
+                "id=" + id +
+                ", book=" + book +
+                ", bookAvailability=" + bookAvailability +
+                '}';
+    }
 }

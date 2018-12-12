@@ -1,5 +1,7 @@
 package com.testowanie_oprogramowania.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,20 +13,39 @@ public class BookBorrowing implements Serializable {
 
     @Id
     @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     private User user;
+
     @ManyToOne
     private BookCopy bookCopy;
+
     @Basic
     @Column(name = "checkout_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
     private Timestamp checkoutDate;
+
     @Basic
     @Column(name = "due_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
     private Timestamp dueDate;
+
     @Basic
     @Column(name = "return_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
     private Timestamp returnDate;
+
+    public BookBorrowing() {
+    }
+
+    public BookBorrowing(User user, BookCopy bookCopy, Timestamp checkoutDate, Timestamp dueDate) {
+        this.user = user;
+        this.bookCopy = bookCopy;
+        this.checkoutDate = checkoutDate;
+        this.dueDate = dueDate;
+    }
 
     public Long getId() {
         return id;
@@ -90,5 +111,17 @@ public class BookBorrowing implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, user, bookCopy, checkoutDate, dueDate, returnDate);
+    }
+
+    @Override
+    public String toString() {
+        return "BookBorrowing{" +
+                "id=" + id +
+                ", user=" + user +
+                ", bookCopy=" + bookCopy +
+                ", checkoutDate=" + checkoutDate +
+                ", dueDate=" + dueDate +
+                ", returnDate=" + returnDate +
+                '}';
     }
 }

@@ -20,23 +20,23 @@ public class UserServiceImpl implements UserService {
     private BookBorrowingRepository bookBorrowingRepository;
 
     @Override
-    public User getUser(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public List<BookBorrowing> getBorrowings(Long id) {
-        return bookBorrowingRepository.findByUserId(id);
+    public User getUser(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<BookBorrowing> getBorrowings(Long id) {
+        return bookBorrowingRepository.findByUserId(id);
     }
 
     @Override

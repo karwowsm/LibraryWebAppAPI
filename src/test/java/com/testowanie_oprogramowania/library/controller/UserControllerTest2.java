@@ -63,7 +63,7 @@ public class UserControllerTest2 {
                 .andExpect(jsonPath("$[0].name", is("Jan")))
                 .andExpect(jsonPath("$[0].surname", is("Kowalski")))
                 .andExpect(jsonPath("$[0].email", is("jann@gmaill.com")))
-                .andExpect(jsonPath("$[0].birthDate", is("2001-10-09")))
+                .andExpect(jsonPath("$[0].birthDate", is("2001-10-10")))
                 .andExpect(jsonPath("$[0].pesel", is("9382129392919")))
                 .andExpect(jsonPath("$[0].login", is("jan321123")))
                 .andExpect(jsonPath("$[0].password", is("qwerty")))
@@ -71,7 +71,7 @@ public class UserControllerTest2 {
                 .andExpect(jsonPath("$[1].name", is("Jan")))
                 .andExpect(jsonPath("$[1].surname", is("Kowalski")))
                 .andExpect(jsonPath("$[1].email", is("jann321@gmaill.com")))
-                .andExpect(jsonPath("$[1].birthDate", is("2001-10-09")))
+                .andExpect(jsonPath("$[1].birthDate", is("2001-10-10")))
                 .andExpect(jsonPath("$[1].pesel", is("9382129392919")))
                 .andExpect(jsonPath("$[1].login", is("jan321123123")))
                 .andExpect(jsonPath("$[1].password", is("qwerty")));

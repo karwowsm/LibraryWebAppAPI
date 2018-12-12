@@ -1,6 +1,7 @@
 package com.testowanie_oprogramowania.library.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
@@ -76,7 +77,7 @@ public class User {
 
     @Basic
     @Column(name = "birth_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Europe/Warsaw")
     public Date getBirthDate() {
         return birthDate;
     }

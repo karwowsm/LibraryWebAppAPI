@@ -18,4 +18,5 @@ public interface UserService {
     User getUserByLogin(String login);
 
     List<BookBorrowing> getBorrowings(Long id);
+
 }
