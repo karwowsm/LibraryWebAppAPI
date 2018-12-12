@@ -7,6 +7,7 @@ import com.testowanie_oprogramowania.library.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -38,4 +39,15 @@ public class UserServiceImpl implements UserService {
         return bookBorrowingRepository.findByUserId(id);
     }
 
+
+    @Override
+    public User getUserByLogin(String login) {
+        return userRepository.getUserByLogin(login);
+    }
+
+    @Override
+    @Transactional
+    public void addUser(User user) {
+        userRepository.save(user);
+    }
 }

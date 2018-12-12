@@ -112,4 +112,16 @@ public class BookBorrowing implements Serializable {
     public int hashCode() {
         return Objects.hash(id, user, bookCopy, checkoutDate, dueDate, returnDate);
     }
+
+    @Override
+    public String toString() {
+        return "BookBorrowing{" +
+                "id=" + id +
+                ", user=" + user +
+                ", bookCopy=" + bookCopy +
+                ", checkoutDate=" + checkoutDate +
+                ", dueDate=" + dueDate +
+                ", returnDate=" + returnDate +
+                '}';
+    }
 }

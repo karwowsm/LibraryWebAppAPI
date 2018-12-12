@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -71,10 +72,10 @@ public class BorrowingControllerTest {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        Date parsedDate1 = dateFormat.parse("2018-12-11 12:12:12");
+        Date parsedDate1 = dateFormat.parse("2099-12-11 12:12:12");
         checkoutDate = new java.sql.Timestamp(parsedDate1.getTime());
 
-        Date parsedDate2 = dateFormat.parse("2018-12-15 14:22:11");
+        Date parsedDate2 = dateFormat.parse("2099-12-15 14:22:11");
         dueDate = new java.sql.Timestamp(parsedDate2.getTime());
 
     }
@@ -97,7 +98,7 @@ public class BorrowingControllerTest {
     @Test
     public void borrowUnavailableBook() throws Exception {
         BookBorrowing bookBorrowing = new BookBorrowing(userService.getUserById((long) 1),
-                bookCopyService.getBookcopyById((long) 1), checkoutDate, dueDate);
+                bookCopyService.getBookcopyById((long) 12), checkoutDate, dueDate);
 
         doThrow(new BookBorrowingException()).when(borrowingService).borrowBook(bookBorrowing);
 

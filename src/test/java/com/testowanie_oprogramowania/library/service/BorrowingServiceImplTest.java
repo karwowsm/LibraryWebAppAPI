@@ -46,10 +46,10 @@ public class BorrowingServiceImplTest {
     public static void initialize() throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        Date parsedDate1 = dateFormat.parse("2018-12-12 12:12:12");
+        Date parsedDate1 = dateFormat.parse("2099-12-12 12:12:12");
         checkoutDate = new java.sql.Timestamp(parsedDate1.getTime());
 
-        Date parsedDate2 = dateFormat.parse("2018-12-15 14:22:11");
+        Date parsedDate2 = dateFormat.parse("2099-12-15 14:22:11");
         dueDate = new java.sql.Timestamp(parsedDate2.getTime());
     }
 

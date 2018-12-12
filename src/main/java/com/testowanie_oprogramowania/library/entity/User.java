@@ -2,6 +2,7 @@ package com.testowanie_oprogramowania.library.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -19,8 +20,22 @@ public class User {
     private String login;
     private String password;
 
+    public User() {
+    }
+
+    public User(String name, String surname, String email, Date birthDate, String pesel, String login, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.birthDate = birthDate;
+        this.pesel = pesel;
+        this.login = login;
+        this.password = password;
+    }
+
     @Id
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", unique = true, nullable = false)
     public Long getId() {
         return id;
     }
@@ -61,7 +76,7 @@ public class User {
 
     @Basic
     @Column(name = "birth_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Europe/Warsaw")
     public Date getBirthDate() {
         return birthDate;
     }
@@ -118,5 +133,19 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, surname, email, birthDate, pesel, login, password);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", birthDate=" + birthDate +
+                ", pesel='" + pesel + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
