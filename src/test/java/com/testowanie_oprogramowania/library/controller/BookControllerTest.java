@@ -259,9 +259,11 @@ public class BookControllerTest {
     @Test
     public void updateBookTest() throws Exception {
         Book book = books.get(0);
+        given(bookService.getBook(book.getId())).willReturn(book);
+        String path = basePath.concat("/").concat(String.valueOf(book.getId()));
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String jsonBook = ow.writeValueAsString(book);
-        mockMvc.perform(post("/books/update")
+        mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBook))
                 .andExpect(status().isOk());
@@ -269,8 +271,21 @@ public class BookControllerTest {
 
     @Test
     public void updateBookTest_withoutBody() throws Exception {
-        mockMvc.perform(post("/books/update")
+        mockMvc.perform(post("/books/NaN")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdate_notExistingBook1() throws Exception {
+        Book book = books.get(0);
+        given(bookService.getBook(book.getId())).willReturn(null);
+        String path = basePath.concat("/").concat(String.valueOf(book.getId()));
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String jsonBook = ow.writeValueAsString(book);
+        mockMvc.perform(post(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonBook))
+                .andExpect(status().isNotFound());
     }
 }

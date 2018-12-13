@@ -53,9 +53,14 @@ public class BookController {
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/update")
-    public void update(@RequestBody Book book) {
-        bookService.addBook(book);
+    @PostMapping("/{id}")
+    public ResponseEntity updateBook(@RequestBody Book book) {
+        Book book1 = bookService.getBook(book.getId());
+        if (book1 != null) {
+            bookService.updateBook(book);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
