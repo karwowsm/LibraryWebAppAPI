@@ -17,4 +17,10 @@ public interface BookService {
     List<Book> searchBook(String q);
 
     List<BookCopy> getCopies(Long id);
+
+    void deleteBookById(Long id);
+
+    void addBook(Book book);
+
+    void updateBook(Book book);
 }

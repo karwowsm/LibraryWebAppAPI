@@ -4,9 +4,11 @@ import com.testowanie_oprogramowania.library.entity.Book;
 import com.testowanie_oprogramowania.library.entity.BookCopy;
 import com.testowanie_oprogramowania.library.repository.BookCopyRepository;
 import com.testowanie_oprogramowania.library.repository.BookRepository;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -37,4 +39,19 @@ public class BookServiceImpl implements BookService {
         return bookCopyRepository.findByBookId(id);
     }
 
+    @Override
+    public void deleteBookById(Long id) {
+        bookRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void addBook(Book book) {
+        bookRepository.save(book);
+    }
+
+    @Override
+    public void updateBook(Book book){
+        bookRepository.save(book);
+    }
 }
