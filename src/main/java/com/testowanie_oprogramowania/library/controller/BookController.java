@@ -53,6 +53,11 @@ public class BookController {
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/update")
+    public void update(@RequestBody Book book) {
+        bookService.addBook(book);
+    }
+
     @PostMapping
     public void addBook(@RequestBody Book book) {
         bookService.addBook(book);

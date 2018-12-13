@@ -255,4 +255,22 @@ public class BookControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void updateBookTest() throws Exception {
+        Book book = books.get(0);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String jsonBook = ow.writeValueAsString(book);
+        mockMvc.perform(post("/books/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonBook))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateBookTest_withoutBody() throws Exception {
+        mockMvc.perform(post("/books/update")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
