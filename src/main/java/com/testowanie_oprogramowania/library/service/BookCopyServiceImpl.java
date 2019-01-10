@@ -5,7 +5,7 @@ import com.testowanie_oprogramowania.library.repository.BookCopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("BookCopyServiceImpl")
 public class BookCopyServiceImpl implements BookCopyService {
 
     @Autowired
