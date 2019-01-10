@@ -1,5 +1,4 @@
-package com.testowanie_oprogramowania.library.benchmark.service;
-
+package com.testowanie_oprogramowania.library.benchmark.controller;
 
 import com.testowanie_oprogramowania.library.LibraryApplication;
 import com.testowanie_oprogramowania.library.entity.BookBorrowing;
@@ -21,21 +20,21 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class UserServiceImplBenchmarkTest {
+public class UserControllerBenchmarkTest {
 
     private UserServiceImpl userService;
 
-    private Long userID;
+    private RestTemplate template;
+    private HttpHeaders jsonHeaders;
 
-    private String userLogin;
+    private Long userId;
 
     static ConfigurableApplicationContext context;
 
     @Setup
     public void setup() throws ParseException {
-        userID = (long) 1;
 
-        userLogin = "jan123";
+        userId = (long) 1;
 
         try {
             String args = "";
@@ -48,6 +47,13 @@ public class UserServiceImplBenchmarkTest {
             e.printStackTrace();
         }
 
+        List<HttpMessageConverter<?>> messageConverters = Lists.newArrayList();
+        messageConverters.add(new MappingJackson2HttpMessageConverter());
+
+        template = new RestTemplate(messageConverters);
+
+        jsonHeaders = new HttpHeaders();
+        jsonHeaders.setContentType(MediaType.APPLICATION_JSON);
     }
 
     @TearDown
@@ -55,24 +61,19 @@ public class UserServiceImplBenchmarkTest {
         context.close();
     }
 
+
     @Benchmark
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<User> getAllUsersFromController() {
+        ResponseEntity<List> response = template.exchange("http://localhost:8080/users", HttpMethod.GET, new HttpEntity<>(jsonHeaders), List.class);
+
+        return response.getBody();
     }
 
     @Benchmark
-    public User getUserById() {
-        return userService.getUserById(userID);
-    }
+    public ResponseEntity getBorrowingsFromController() {
+        ResponseEntity response = template.exchange("http://localhost:8080/users/" + userId + "/borrowings", HttpMethod.GET, new HttpEntity<>(jsonHeaders), List.class);
 
-    @Benchmark
-    public User getUserByLogin() {
-        return userService.getUserByLogin(userLogin);
-    }
-
-    @Benchmark
-    public List<BookBorrowing> getBorrowings() {
-        return userService.getBorrowings(userID);
+        return response;
     }
 
 }
