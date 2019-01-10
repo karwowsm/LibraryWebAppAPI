@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Service
+@Service("BorrowingServiceImpl")
 public class BorrowingServiceImpl implements BorrowingService {
 
     @Autowired
