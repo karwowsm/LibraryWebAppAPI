@@ -1,18 +1,11 @@
 package com.testowanie_oprogramowania.library.benchmark;
 
-import com.testowanie_oprogramowania.library.LibraryApplication;
-import org.junit.runner.RunWith;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,11 +15,11 @@ import java.time.format.DateTimeFormatter;
 public class BenchmarkBase {
     public static void main(String[] args) throws RunnerException, IOException {
 
-        ResultFormatType resultsFileOutputType = ResultFormatType.JSON;
+        ResultFormatType resultsFileOutputType = ResultFormatType.LATEX;
 
         Options opt = new OptionsBuilder()
-                .warmupIterations(5)
-                .measurementIterations(5)
+                .warmupIterations(3)
+                .measurementIterations(3)
                 .forks(1)
                 .threads(1)
                 .shouldDoGC(true)

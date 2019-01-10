@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
+@Service("BookServiceImpl")
 public class BookServiceImpl implements BookService {
 
     @Autowired
