@@ -22,11 +22,11 @@ import java.time.format.DateTimeFormatter;
 public class BenchmarkBase {
     public static void main(String[] args) throws RunnerException, IOException {
 
-        ResultFormatType resultsFileOutputType = ResultFormatType.JSON;
+        ResultFormatType resultsFileOutputType = ResultFormatType.LATEX;
 
         Options opt = new OptionsBuilder()
-                .warmupIterations(5)
-                .measurementIterations(5)
+                .warmupIterations(3)
+                .measurementIterations(3)
                 .forks(1)
                 .threads(1)
                 .shouldDoGC(true)
