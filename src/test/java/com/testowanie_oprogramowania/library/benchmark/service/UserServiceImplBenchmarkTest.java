@@ -55,22 +55,22 @@ public class UserServiceImplBenchmarkTest {
         context.close();
     }
 
-    //@Benchmark
+    @Benchmark
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    //@Benchmark
+    @Benchmark
     public User getUserById() {
         return userService.getUserById(userID);
     }
 
-    //@Benchmark
+    @Benchmark
     public User getUserByLogin() {
         return userService.getUserByLogin(userLogin);
     }
 
-    //@Benchmark
+    @Benchmark
     public List<BookBorrowing> getBorrowings() {
         return userService.getBorrowings(userID);
     }
